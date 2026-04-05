@@ -1,0 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&display=swap');
+@import "tailwindcss";
+
+:root {
+  --navy: #0B1C2C;
+  --gold: #C9A84C;
+  --blue: #1B6CA8;
+  --bg: #F8F9FB;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #F8F9FB;
+  color: #0B1C2C;
+}
+
+body[dir="ltr"],
+body[dir="ltr"] * {
+  font-family: 'DM Sans', sans-serif;
+}
+
+body[dir="rtl"],
+body[dir="rtl"] * {
+  font-family: 'Tajawal', sans-serif;
+}
+
+.font-arabic {
+  font-family: 'Tajawal', sans-serif !important;
+}
+
+.font-english {
+  font-family: 'DM Sans', sans-serif !important;
+}
