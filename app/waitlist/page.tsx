@@ -1,290 +1,214 @@
 'use client'
-
 import { useState, useEffect } from 'react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import MagneticButton from '@/components/MagneticButton'
+import RevealSection from '@/components/RevealSection'
 import { useLang } from '@/context/LanguageContext'
 
-type WaitlistEntry = {
-  id: string
-  name: string
-  whatsapp: string
-  createdAt: string
+type WaitlistEntry = { id: string; name: string; whatsapp: string; createdAt: string }
+
+function fireConfetti() {
+  const colors = ['#C9A84C', '#F5D98A', '#0B1C2C', '#ffffff', '#1B6CA8']
+  for (let i = 0; i < 80; i++) {
+    const el = document.createElement('div')
+    el.className = 'confetti-particle'
+    el.style.cssText = `left:${Math.random()*100}%;background:${colors[Math.floor(Math.random()*colors.length)]};animation-duration:${0.8+Math.random()*1.2}s;animation-delay:${Math.random()*0.5}s;width:${6+Math.random()*8}px;height:${6+Math.random()*8}px;border-radius:${Math.random()>0.5?'50%':'2px'}`
+    document.body.appendChild(el)
+    setTimeout(() => el.remove(), 3000)
+  }
 }
 
 export default function WaitlistPage() {
   const { t, lang } = useLang()
+  const [step, setStep] = useState(1)
   const [name, setName] = useState('')
   const [whatsapp, setWhatsapp] = useState('')
+  const [sport, setSport] = useState('')
   const [loading, setLoading] = useState(false)
   const [joined, setJoined] = useState(false)
   const [entries, setEntries] = useState<WaitlistEntry[]>([])
-  const [alreadyJoined, setAlreadyJoined] = useState(false)
 
-  // Seed some fake waitlist entries for display
   useEffect(() => {
     const saved = localStorage.getItem('waitlistEntries')
-    if (saved) {
-      setEntries(JSON.parse(saved))
-    } else {
-      const seed: WaitlistEntry[] = [
-        { id: '1', name: 'Mohammad Al-Khatib', whatsapp: '+962790000001', createdAt: new Date().toISOString() },
-        { id: '2', name: 'Lana Abukhait', whatsapp: '+962790000002', createdAt: new Date().toISOString() },
-        { id: '3', name: 'Kareem Zidan', whatsapp: '+962790000003', createdAt: new Date().toISOString() },
-        { id: '4', name: 'Nour Mansour', whatsapp: '+962790000004', createdAt: new Date().toISOString() },
-        { id: '5', name: 'Hana Taha', whatsapp: '+962790000005', createdAt: new Date().toISOString() },
-      ]
+    if (saved) setEntries(JSON.parse(saved))
+    else {
+      const seed = ['Ahmad K.', 'Sara M.', 'Khalid T.', 'Rania S.', 'Omar N.'].map((n, i) => ({
+        id: `s${i}`, name: n, whatsapp: `+96279000000${i}`, createdAt: new Date().toISOString()
+      }))
       setEntries(seed)
       localStorage.setItem('waitlistEntries', JSON.stringify(seed))
     }
-
-    // Check if user already joined
-    const myEntry = localStorage.getItem('myWaitlistEntry')
-    if (myEntry) {
-      setAlreadyJoined(true)
-      setJoined(true)
-    }
+    if (localStorage.getItem('myWaitlistEntry')) setJoined(true)
   }, [])
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!name.trim() || !whatsapp.trim()) return
-
-    setLoading(true)
-    await new Promise((r) => setTimeout(r, 800))
-
-    const newEntry: WaitlistEntry = {
-      id: `wl-${Date.now()}`,
-      name: name.trim(),
-      whatsapp: whatsapp.trim(),
-      createdAt: new Date().toISOString(),
-    }
-
-    const updated = [...entries, newEntry]
-    setEntries(updated)
-    localStorage.setItem('waitlistEntries', JSON.stringify(updated))
-    localStorage.setItem('myWaitlistEntry', JSON.stringify(newEntry))
-
-    setLoading(false)
-    setJoined(true)
-    setAlreadyJoined(true)
-  }
-
-  const sports = [
-    { emoji: '🏓', name: lang === 'en' ? 'Padel' : 'بادل' },
-    { emoji: '⚽', name: lang === 'en' ? 'Football' : 'كرة القدم' },
-    { emoji: '🏀', name: lang === 'en' ? 'Basketball' : 'كرة السلة' },
-    { emoji: '🎾', name: lang === 'en' ? 'Tennis' : 'تنس' },
-    { emoji: '🏊', name: lang === 'en' ? 'Swimming' : 'سباحة' },
-    { emoji: '🏸', name: lang === 'en' ? 'Badminton' : 'ريشة طائرة' },
+  const SPORTS_LIST = [
+    { slug: 'padel', emoji: '🏓', en: 'Padel', ar: 'بادل' },
+    { slug: 'football', emoji: '⚽', en: 'Football', ar: 'كرة القدم' },
+    { slug: 'basketball', emoji: '🏀', en: 'Basketball', ar: 'كرة السلة' },
+    { slug: 'tennis', emoji: '🎾', en: 'Tennis', ar: 'تنس' },
+    { slug: 'swimming', emoji: '🏊', en: 'Swimming', ar: 'سباحة' },
+    { slug: 'badminton', emoji: '🏸', en: 'Badminton', ar: 'ريشة طائرة' },
   ]
 
+  const submit = async () => {
+    setLoading(true)
+    await new Promise(r => setTimeout(r, 900))
+    const entry: WaitlistEntry = { id: `wl-${Date.now()}`, name, whatsapp, createdAt: new Date().toISOString() }
+    const updated = [...entries, entry]
+    setEntries(updated)
+    localStorage.setItem('waitlistEntries', JSON.stringify(updated))
+    localStorage.setItem('myWaitlistEntry', JSON.stringify(entry))
+    setLoading(false)
+    setJoined(true)
+    fireConfetti()
+  }
+
   return (
-    <div className="flex flex-col min-h-screen bg-[#F8F9FB]">
+    <div className="flex flex-col min-h-screen" style={{ background: 'var(--navy)' }}>
       <Navbar />
 
-      {/* Hero */}
-      <section className="bg-gradient-to-br from-[#0B1C2C] to-[#1B3A5C] text-white py-16 md:py-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[#C9A84C]/20 border border-[#C9A84C]/30 mb-5 text-3xl">
-            📋
-          </div>
-          <h1
-            className="text-3xl md:text-5xl font-black mb-4"
-            style={{
-              fontFamily: lang === 'ar' ? 'Tajawal, sans-serif' : 'DM Sans, sans-serif',
-              color: '#C9A84C',
-            }}
-          >
-            {t('waitlistTitle')}
-          </h1>
-          <p className="text-gray-300 text-base md:text-lg max-w-xl mx-auto">
-            {t('waitlistDesc')}
-          </p>
+      <section className="flex-1 py-20 px-5 sm:px-8">
+        <div className="max-w-lg mx-auto">
+          <RevealSection>
+            <div className="text-center mb-10">
+              <span className="inline-block px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-4"
+                style={{ background: 'rgba(201,168,76,0.15)', color: 'var(--gold)' }}>
+                {lang === 'ar' ? 'قائمة الانتظار' : 'Waitlist'}
+              </span>
+              <h1 className="font-bebas text-6xl text-white mb-3">
+                {lang === 'ar' ? 'احجز مكانك الآن' : 'Secure Your Spot'}
+              </h1>
+              <p style={{ color: 'rgba(255,255,255,0.5)' }}>
+                {lang === 'ar'
+                  ? `انضم إلى ${entries.length}+ شخص في القائمة`
+                  : `Join ${entries.length}+ people on the waitlist`}
+              </p>
+            </div>
+          </RevealSection>
 
-          {/* Counter */}
-          <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-2xl px-5 py-3 mt-6">
-            <span className="text-2xl font-black text-[#C9A84C]">{entries.length}</span>
-            <span className="text-sm text-gray-300">{t('currentWaitlist')}</span>
-          </div>
+          {joined ? (
+            <RevealSection>
+              <div className="rounded-3xl p-10 text-center"
+                style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
+                <div className="text-6xl mb-5">🎉</div>
+                <h2 className="font-bebas text-4xl text-white mb-2">
+                  {lang === 'ar' ? 'أنت في القائمة!' : "You're In!"}
+                </h2>
+                <p style={{ color: 'rgba(255,255,255,0.5)' }}>
+                  {lang === 'ar' ? 'سنتواصل معك عبر واتساب عند الإطلاق.' : "We'll reach out via WhatsApp at launch."}
+                </p>
+                <div className="mt-8 font-bebas text-7xl" style={{ color: 'var(--gold)' }}>
+                  #{entries.length}
+                </div>
+                <div className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                  {lang === 'ar' ? 'موقعك في القائمة' : 'Your position'}
+                </div>
+              </div>
+            </RevealSection>
+          ) : (
+            <RevealSection delay={100}>
+              <div className="rounded-3xl overflow-hidden"
+                style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)' }}>
+                {/* Step indicator */}
+                <div className="flex" style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+                  {[1, 2, 3].map(s => (
+                    <div key={s} className="flex-1 py-3 text-center text-xs font-bold transition-all"
+                      style={{ color: step >= s ? 'var(--gold)' : 'rgba(255,255,255,0.3)', background: step === s ? 'rgba(201,168,76,0.1)' : 'transparent' }}>
+                      {s === 1 ? (lang === 'ar' ? 'معلوماتك' : 'Your Info') : s === 2 ? (lang === 'ar' ? 'رياضتك' : 'Your Sport') : (lang === 'ar' ? 'تأكيد' : 'Confirm')}
+                    </div>
+                  ))}
+                </div>
+
+                <div className="p-8">
+                  {step === 1 && (
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-xs font-semibold mb-2" style={{ color: 'rgba(255,255,255,0.6)' }}>
+                          {lang === 'ar' ? 'اسمك' : 'Your Name'} *
+                        </label>
+                        <input type="text" required value={name} onChange={e => setName(e.target.value)}
+                          placeholder={lang === 'ar' ? 'الاسم الكامل' : 'Full name'}
+                          className="w-full px-4 py-3 rounded-xl text-sm outline-none"
+                          style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)', color: 'white' }} />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-semibold mb-2" style={{ color: 'rgba(255,255,255,0.6)' }}>
+                          {lang === 'ar' ? 'واتساب' : 'WhatsApp'} *
+                        </label>
+                        <input type="tel" required value={whatsapp} onChange={e => setWhatsapp(e.target.value)}
+                          placeholder="+962 7X XXX XXXX" dir="ltr"
+                          className="w-full px-4 py-3 rounded-xl text-sm outline-none"
+                          style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)', color: 'white' }} />
+                      </div>
+                      <MagneticButton onClick={() => name && whatsapp && setStep(2)}
+                        className="w-full py-3 rounded-2xl font-semibold text-sm mt-2"
+                        style={{ background: 'var(--gold)', color: 'var(--navy)' } as React.CSSProperties}>
+                        {lang === 'ar' ? 'التالي →' : 'Next →'}
+                      </MagneticButton>
+                    </div>
+                  )}
+
+                  {step === 2 && (
+                    <div>
+                      <p className="text-sm mb-4 text-center" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                        {lang === 'ar' ? 'ما رياضتك المفضلة؟' : "What's your favorite sport?"}
+                      </p>
+                      <div className="grid grid-cols-3 gap-3 mb-6">
+                        {SPORTS_LIST.map(s => (
+                          <button key={s.slug} onClick={() => setSport(s.slug)}
+                            className="flex flex-col items-center gap-1 p-3 rounded-xl transition-all"
+                            style={sport === s.slug
+                              ? { background: 'rgba(201,168,76,0.2)', border: '1.5px solid var(--gold)' }
+                              : { background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                            <span className="text-2xl">{s.emoji}</span>
+                            <span className="text-xs font-semibold text-white">{lang === 'ar' ? s.ar : s.en}</span>
+                          </button>
+                        ))}
+                      </div>
+                      <div className="flex gap-3">
+                        <button onClick={() => setStep(1)} className="flex-1 py-3 rounded-2xl text-sm font-semibold"
+                          style={{ background: 'rgba(255,255,255,0.07)', color: 'white' }}>
+                          ←
+                        </button>
+                        <MagneticButton onClick={() => sport && setStep(3)}
+                          className="flex-[3] py-3 rounded-2xl font-semibold text-sm"
+                          style={{ background: 'var(--gold)', color: 'var(--navy)' } as React.CSSProperties}>
+                          {lang === 'ar' ? 'التالي →' : 'Next →'}
+                        </MagneticButton>
+                      </div>
+                    </div>
+                  )}
+
+                  {step === 3 && (
+                    <div className="text-center">
+                      <div className="text-4xl mb-4">✅</div>
+                      <h3 className="font-bebas text-2xl text-white mb-4">{lang === 'ar' ? 'تأكيد الانضمام' : 'Confirm Join'}</h3>
+                      <div className="rounded-2xl p-4 mb-6 text-left"
+                        style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                        <div className="text-sm text-white mb-1"><span style={{ color: 'var(--gold)' }}>Name:</span> {name}</div>
+                        <div className="text-sm text-white mb-1"><span style={{ color: 'var(--gold)' }}>WhatsApp:</span> {whatsapp}</div>
+                        <div className="text-sm text-white"><span style={{ color: 'var(--gold)' }}>Sport:</span> {SPORTS_LIST.find(s => s.slug === sport)?.[lang === 'ar' ? 'ar' : 'en']}</div>
+                      </div>
+                      <div className="flex gap-3">
+                        <button onClick={() => setStep(2)} className="flex-1 py-3 rounded-2xl text-sm font-semibold"
+                          style={{ background: 'rgba(255,255,255,0.07)', color: 'white' }}>
+                          ←
+                        </button>
+                        <MagneticButton onClick={submit} disabled={loading}
+                          className="flex-[3] py-3 rounded-2xl font-semibold text-sm"
+                          style={{ background: 'var(--gold)', color: 'var(--navy)', opacity: loading ? 0.7 : 1 } as React.CSSProperties}>
+                          {loading ? '...' : (lang === 'ar' ? 'انضم الآن 🎉' : 'Join Now 🎉')}
+                        </MagneticButton>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </RevealSection>
+          )}
         </div>
       </section>
-
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
-        <div className="grid md:grid-cols-2 gap-8 items-start">
-          {/* Form */}
-          <div>
-            {!joined ? (
-              <div className="bg-white rounded-3xl shadow-md border border-gray-100 p-8">
-                <h2
-                  className="text-xl font-bold text-[#0B1C2C] mb-2"
-                  style={{ fontFamily: lang === 'ar' ? 'Tajawal, sans-serif' : 'DM Sans, sans-serif' }}
-                >
-                  {t('joinWaitlist')}
-                </h2>
-                <p className="text-gray-500 text-sm mb-6">
-                  {lang === 'en'
-                    ? "Fill in your details and we'll reach out via WhatsApp."
-                    : 'أدخل بياناتك وسنتواصل معك عبر واتساب.'}
-                </p>
-
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-semibold text-[#0B1C2C] mb-1.5">
-                      {t('waitlistName')} *
-                    </label>
-                    <input
-                      type="text"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      placeholder={t('namePlaceholder')}
-                      required
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#1B6CA8] focus:outline-none text-[#0B1C2C] placeholder-gray-400 transition-colors"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-semibold text-[#0B1C2C] mb-1.5">
-                      {t('waitlistWhatsapp')} *
-                    </label>
-                    <input
-                      type="tel"
-                      value={whatsapp}
-                      onChange={(e) => setWhatsapp(e.target.value)}
-                      placeholder={t('whatsappPlaceholder')}
-                      required
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-[#1B6CA8] focus:outline-none text-[#0B1C2C] placeholder-gray-400 transition-colors"
-                      dir="ltr"
-                    />
-                  </div>
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    className="w-full py-3.5 rounded-xl bg-[#C9A84C] hover:bg-[#b8962f] text-[#0B1C2C] font-bold text-base transition-colors disabled:opacity-60 disabled:cursor-not-allowed mt-2"
-                  >
-                    {loading ? (
-                      <span className="flex items-center justify-center gap-2">
-                        <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                        </svg>
-                        {lang === 'en' ? 'Joining...' : 'جاري الانضمام...'}
-                      </span>
-                    ) : t('joinWaitlist')}
-                  </button>
-                </form>
-              </div>
-            ) : (
-              <div className="bg-white rounded-3xl shadow-md border border-emerald-100 p-8 text-center">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-100 mb-4">
-                  <svg className="w-8 h-8 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                  </svg>
-                </div>
-                <h3
-                  className="text-xl font-bold text-[#0B1C2C] mb-2"
-                  style={{ fontFamily: lang === 'ar' ? 'Tajawal, sans-serif' : 'DM Sans, sans-serif' }}
-                >
-                  {t('waitlistSuccess')}
-                </h3>
-                <p className="text-gray-500 text-sm mb-4">{t('waitlistSuccessDesc')}</p>
-
-                {/* Position in queue */}
-                <div className="bg-[#F8F9FB] rounded-2xl px-6 py-4 inline-block">
-                  <div className="text-3xl font-black text-[#1B6CA8]">#{entries.length}</div>
-                  <div className="text-xs text-gray-500 mt-0.5">
-                    {lang === 'en' ? 'Your position in queue' : 'موقعك في القائمة'}
-                  </div>
-                </div>
-
-                <div className="mt-6">
-                  <p className="text-sm text-gray-400">
-                    {lang === 'en'
-                      ? "You're all set! We'll notify you on WhatsApp when new courts or slots open."
-                      : 'أنت جاهز! سنخطرك عبر واتساب عند فتح ملاعب أو مواعيد جديدة.'}
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {/* Sports chips */}
-            <div className="mt-6">
-              <p className="text-sm text-gray-500 mb-3 text-center">
-                {lang === 'en' ? 'Available sports at La3ebeh Arena:' : 'الرياضات المتاحة في لعيبة أرينا:'}
-              </p>
-              <div className="flex flex-wrap gap-2 justify-center">
-                {sports.map((s) => (
-                  <span
-                    key={s.name}
-                    className="flex items-center gap-1 bg-white border border-gray-200 text-gray-600 text-xs font-medium px-3 py-1.5 rounded-full"
-                  >
-                    {s.emoji} {s.name}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Waitlist members counter + visual */}
-          <div>
-            <div className="bg-white rounded-3xl shadow-md border border-gray-100 p-8 mb-4">
-              <h3
-                className="text-lg font-bold text-[#0B1C2C] mb-4"
-                style={{ fontFamily: lang === 'ar' ? 'Tajawal, sans-serif' : 'DM Sans, sans-serif' }}
-              >
-                {lang === 'en' ? 'People waiting' : 'الأشخاص المنتظرون'}
-              </h3>
-
-              {/* Visual queue */}
-              <div className="space-y-2">
-                {entries.slice(0, 8).map((entry, idx) => (
-                  <div
-                    key={entry.id}
-                    className="flex items-center gap-3 p-3 rounded-xl bg-[#F8F9FB] border border-gray-100"
-                  >
-                    <div className="w-8 h-8 rounded-full bg-[#1B6CA8] text-white flex items-center justify-center text-xs font-bold flex-shrink-0">
-                      {idx + 1}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-sm font-semibold text-[#0B1C2C] truncate">{entry.name}</div>
-                    </div>
-                    <div className="text-xs text-gray-400 flex-shrink-0">
-                      {new Date(entry.createdAt).toLocaleDateString(lang === 'ar' ? 'ar-JO' : 'en-GB', { month: 'short', day: 'numeric' })}
-                    </div>
-                  </div>
-                ))}
-                {entries.length > 8 && (
-                  <div className="text-center py-2 text-sm text-gray-400">
-                    +{entries.length - 8} {lang === 'en' ? 'more' : 'آخرين'}
-                  </div>
-                )}
-              </div>
-
-              {entries.length === 0 && (
-                <p className="text-center text-gray-400 text-sm py-4">
-                  {lang === 'en' ? 'Be the first to join!' : 'كن أول من ينضم!'}
-                </p>
-              )}
-            </div>
-
-            {/* CTA to book */}
-            <div className="bg-gradient-to-br from-[#0B1C2C] to-[#1B3A5C] rounded-3xl p-6 text-white text-center">
-              <div className="text-3xl mb-2">🏟️</div>
-              <h3 className="font-bold text-[#C9A84C] mb-1">
-                {lang === 'en' ? 'Courts available now?' : 'ملاعب متاحة الآن؟'}
-              </h3>
-              <p className="text-gray-300 text-sm mb-4">
-                {lang === 'en' ? 'Check our courts for open time slots.' : 'تحقق من ملاعبنا للمواعيد المتاحة.'}
-              </p>
-              <a
-                href="/"
-                className="inline-block bg-[#C9A84C] hover:bg-[#b8962f] text-[#0B1C2C] font-bold px-6 py-2.5 rounded-xl text-sm transition-colors"
-              >
-                {t('exploreCourts')}
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
 
       <Footer />
     </div>

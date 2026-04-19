@@ -1,113 +1,100 @@
 'use client'
-
-import Link from 'next/link'
 import { useState } from 'react'
+import Link from 'next/link'
 import { useLang } from '@/context/LanguageContext'
+import MagneticButton from './MagneticButton'
+
+const NAV_LINKS = [
+  { href: '/',             labelKey: 'home' as const },
+  { href: '/courts',       labelKey: 'courts' as const },
+  { href: '/how-it-works', labelKey: 'howItWorks' as const },
+  { href: '/for-courts',   labelKey: 'forCourts' as const },
+]
 
 export default function Navbar() {
   const { t, lang, toggleLang } = useLang()
-  const [menuOpen, setMenuOpen] = useState(false)
+  const [open, setOpen] = useState(false)
 
   return (
-    <nav className="sticky top-0 z-50 bg-[#0B1C2C] shadow-lg">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 flex-shrink-0">
-            <span className="text-2xl">🏟️</span>
-            <span
-              className="font-bold text-white text-lg leading-tight"
-              style={{ fontFamily: lang === 'ar' ? 'Tajawal, sans-serif' : 'DM Sans, sans-serif' }}
-            >
-              {t('appName')}
-            </span>
-          </Link>
+    <>
+      <nav className="nav-root w-full" style={{ position: 'sticky', top: 0, zIndex: 1000 }}>
+        <div className="max-w-7xl mx-auto px-5 sm:px-8">
+          <div className="flex items-center justify-between h-[68px]">
 
-          {/* Desktop nav */}
-          <div className="hidden md:flex items-center gap-6">
-            <Link
-              href="/"
-              className="text-gray-300 hover:text-[#C9A84C] transition-colors text-sm font-medium"
-            >
-              {t('home')}
-            </Link>
-            <Link
-              href="/waitlist"
-              className="text-gray-300 hover:text-[#C9A84C] transition-colors text-sm font-medium"
-            >
-              {t('waitlist')}
-            </Link>
-            <Link
-              href="/admin"
-              className="text-gray-300 hover:text-[#C9A84C] transition-colors text-sm font-medium"
-            >
-              {t('admin')}
+            {/* Logo */}
+            <Link href="/" className="flex items-center gap-2.5 flex-shrink-0">
+              <span className="pulse-dot" />
+              <span className="font-bebas text-2xl tracking-widest"
+                style={{ color: 'var(--gold)' }}>
+                LA3EBEH ARENA
+              </span>
             </Link>
 
-            {/* Language toggle */}
-            <button
-              onClick={toggleLang}
-              className="flex items-center gap-1.5 bg-[#1B6CA8] hover:bg-[#1558891] text-white text-sm font-medium px-3 py-1.5 rounded-full transition-colors border border-[#1B6CA8] hover:border-[#C9A84C]"
-              style={{ fontFamily: lang === 'ar' ? 'DM Sans, sans-serif' : 'Tajawal, sans-serif' }}
-            >
-              <span>{lang === 'en' ? '🇯🇴 عربي' : '🇬🇧 EN'}</span>
-            </button>
+            {/* Desktop links */}
+            <div className="nav-links-desktop hidden md:flex items-center gap-7">
+              {NAV_LINKS.map(({ href, labelKey }) => (
+                <Link key={href} href={href}
+                  className="relative text-sm font-medium text-gray-300 hover:text-white transition-colors group">
+                  {t(labelKey)}
+                  <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-[var(--gold)] transition-all duration-300 group-hover:w-full" />
+                </Link>
+              ))}
+            </div>
+
+            {/* Right side */}
+            <div className="flex items-center gap-3">
+              <button onClick={toggleLang}
+                className="hidden md:flex items-center gap-1 px-3 py-1.5 rounded-full border text-xs font-semibold transition-all"
+                style={{ borderColor: 'rgba(255,255,255,0.2)', color: 'white',
+                         background: 'rgba(255,255,255,0.06)' }}>
+                {lang === 'en' ? '🇯🇴 AR' : '🇬🇧 EN'}
+              </button>
+
+              <MagneticButton
+                onClick={() => window.location.href = '/waitlist'}
+                className="hidden md:inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-semibold"
+                style={{ background: 'var(--gold)', color: 'var(--navy)' } as React.CSSProperties}>
+                {t('joinWaitlist')}
+              </MagneticButton>
+
+              {/* Mobile hamburger */}
+              <button className="nav-mobile-btn flex md:hidden flex-col gap-1.5 p-2"
+                onClick={() => setOpen(true)} aria-label="Open menu">
+                <span className="w-6 h-0.5 bg-white rounded" />
+                <span className="w-4 h-0.5 bg-white rounded" />
+                <span className="w-6 h-0.5 bg-white rounded" />
+              </button>
+            </div>
           </div>
+        </div>
+      </nav>
 
-          {/* Mobile: lang + hamburger */}
-          <div className="flex md:hidden items-center gap-3">
-            <button
-              onClick={toggleLang}
-              className="text-white text-sm bg-[#1B6CA8] px-2.5 py-1 rounded-full"
-              style={{ fontFamily: lang === 'ar' ? 'DM Sans, sans-serif' : 'Tajawal, sans-serif' }}
-            >
-              {lang === 'en' ? 'عربي' : 'EN'}
-            </button>
-            <button
-              onClick={() => setMenuOpen(!menuOpen)}
-              className="text-gray-300 hover:text-white p-1"
-              aria-label="Toggle menu"
-            >
-              {menuOpen ? (
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              ) : (
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              )}
-            </button>
-          </div>
+      {/* Mobile overlay */}
+      <div className={`mobile-nav-overlay ${open ? 'open' : ''}`}
+        style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+        <button className="absolute top-5 right-5 text-white text-3xl" onClick={() => setOpen(false)}>✕</button>
+        <div className="flex flex-col items-center gap-8">
+          {NAV_LINKS.map(({ href, labelKey }, i) => (
+            <Link key={href} href={href}
+              className="font-bebas text-4xl tracking-wider"
+              style={{ color: 'var(--gold)', animationDelay: `${i * 60}ms` }}
+              onClick={() => setOpen(false)}>
+              {t(labelKey)}
+            </Link>
+          ))}
+          <button onClick={() => { toggleLang(); setOpen(false) }}
+            className="mt-4 px-6 py-2 rounded-full border text-white text-sm font-semibold"
+            style={{ borderColor: 'var(--gold)' }}>
+            {lang === 'en' ? '🇯🇴 Switch to Arabic' : '🇬🇧 Switch to English'}
+          </button>
+          <MagneticButton
+            onClick={() => { window.location.href = '/waitlist'; setOpen(false) }}
+            className="px-8 py-3 rounded-full text-sm font-bold"
+            style={{ background: 'var(--gold)', color: 'var(--navy)' } as React.CSSProperties}>
+            {t('joinWaitlist')}
+          </MagneticButton>
         </div>
       </div>
-
-      {/* Mobile menu */}
-      {menuOpen && (
-        <div className="md:hidden bg-[#0d2236] border-t border-[#1B6CA8]/30 px-4 py-3 space-y-2">
-          <Link
-            href="/"
-            onClick={() => setMenuOpen(false)}
-            className="block text-gray-300 hover:text-[#C9A84C] py-2 text-sm font-medium"
-          >
-            {t('home')}
-          </Link>
-          <Link
-            href="/waitlist"
-            onClick={() => setMenuOpen(false)}
-            className="block text-gray-300 hover:text-[#C9A84C] py-2 text-sm font-medium"
-          >
-            {t('waitlist')}
-          </Link>
-          <Link
-            href="/admin"
-            onClick={() => setMenuOpen(false)}
-            className="block text-gray-300 hover:text-[#C9A84C] py-2 text-sm font-medium"
-          >
-            {t('admin')}
-          </Link>
-        </div>
-      )}
-    </nav>
+    </>
   )
 }
