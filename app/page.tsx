@@ -1,29 +1,27 @@
 'use client'
 import Navbar from '@/components/Navbar'
-import Hero from '@/components/Hero'
-import SportsTicker from '@/components/SportsTicker'
-import ProblemSection from '@/components/ProblemSection'
-import HowItWorksSection from '@/components/HowItWorksSection'
-import FeaturesGrid from '@/components/FeaturesGrid'
-import SportsGrid from '@/components/SportsGrid'
-import LoyaltySection from '@/components/LoyaltySection'
-import PricingSection from '@/components/PricingSection'
-import WaitlistCTA from '@/components/WaitlistCTA'
+import KortnaHero from '@/components/KortnaHero'
+import KortnaFeatures from '@/components/KortnaFeatures'
+import KortnaHowItWorks from '@/components/KortnaHowItWorks'
+import KortnaStats from '@/components/KortnaStats'
+import KortnaForVenues from '@/components/KortnaForVenues'
+import KortnaTestimonials from '@/components/KortnaTestimonials'
+import KortnaFAQ from '@/components/KortnaFAQ'
+import KortnaFinalCTA from '@/components/KortnaFinalCTA'
 import Footer from '@/components/Footer'
 
 export default function HomePage() {
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
-      <Hero />
-      <SportsTicker />
-      <ProblemSection />
-      <HowItWorksSection />
-      <FeaturesGrid />
-      <SportsGrid />
-      <LoyaltySection />
-      <PricingSection />
-      <WaitlistCTA />
+      <KortnaHero />
+      <KortnaFeatures />
+      <KortnaHowItWorks />
+      <KortnaStats />
+      <KortnaForVenues />
+      <KortnaTestimonials />
+      <KortnaFAQ />
+      <KortnaFinalCTA />
       <Footer />
     </div>
   )
