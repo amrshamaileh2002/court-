@@ -1,15 +1,16 @@
 'use client'
-import { useRef, ReactNode, MouseEvent } from 'react'
+import { useRef, ReactNode, MouseEvent, CSSProperties } from 'react'
 
 interface Props {
   children: ReactNode
   className?: string
+  style?: CSSProperties
   onClick?: () => void
   type?: 'button' | 'submit'
   disabled?: boolean
 }
 
-export default function MagneticButton({ children, className = '', onClick, type = 'button', disabled }: Props) {
+export default function MagneticButton({ children, className = '', style, onClick, type = 'button', disabled }: Props) {
   const ref = useRef<HTMLButtonElement>(null)
 
   const onMove = (e: MouseEvent<HTMLButtonElement>) => {
@@ -37,6 +38,7 @@ export default function MagneticButton({ children, className = '', onClick, type
     <button
       ref={ref}
       type={type}
+      style={style}
       className={`btn-magnetic ${className}`}
       onMouseMove={onMove}
       onMouseLeave={onLeave}

@@ -1,11 +1,11 @@
 'use client'
-import { useEffect, useRef, ReactNode } from 'react'
+import React, { useEffect, useRef, ReactNode } from 'react'
 
 interface Props {
   children: ReactNode
   className?: string
   delay?: number
-  tag?: keyof JSX.IntrinsicElements
+  tag?: keyof React.JSX.IntrinsicElements
 }
 
 export default function RevealSection({ children, className = '', delay = 0, tag: Tag = 'div' }: Props) {
