@@ -5,9 +5,16 @@ export const translations = {
     // Nav
     appName: 'La3ebeh Arena',
     home: 'Home',
+    courts: 'Courts',
+    howItWorks: 'How It Works',
+    forCourts: 'For Courts',
     admin: 'Admin',
     waitlist: 'Waitlist',
     bookNow: 'Book Now',
+    joinWaitlist: 'Join Waitlist',
+    seeHowItWorks: 'See How It Works',
+    comingSoon: 'Coming Soon · Jordan 2025',
+    heroDesc: "Jordan's first all-in-one sports court booking platform. Find, book, and play in minutes.",
 
     // Hero
     heroTitle: 'La3ebeh Arena',
@@ -93,9 +100,16 @@ export const translations = {
     // Nav
     appName: 'لعيبة أرينا',
     home: 'الرئيسية',
+    courts: 'الملاعب',
+    howItWorks: 'كيف يعمل',
+    forCourts: 'لأصحاب الملاعب',
     admin: 'الإدارة',
     waitlist: 'قائمة الانتظار',
     bookNow: 'احجز الآن',
+    joinWaitlist: 'انضم للقائمة',
+    seeHowItWorks: 'كيف يعمل',
+    comingSoon: 'قريباً · الأردن 2025',
+    heroDesc: 'أول منصة متكاملة لحجز الملاعب الرياضية في الأردن. ابحث واحجز والعب خلال دقائق.',
 
     // Hero
     heroTitle: 'لعيبة أرينا',
