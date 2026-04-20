@@ -2,8 +2,7 @@
 import { useState } from 'react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
-import RevealSection from '@/components/RevealSection'
-import MagneticButton from '@/components/MagneticButton'
+import KortnaButton from '@/components/KortnaButton'
 import { useLang } from '@/context/LanguageContext'
 
 const BENEFITS = [
@@ -21,6 +20,8 @@ export default function ForCourtsPage() {
   const [done, setDone] = useState(false)
   const [loading, setLoading] = useState(false)
 
+  const isAr = lang === 'ar'
+
   const submit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
@@ -30,80 +31,120 @@ export default function ForCourtsPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <Navbar />
 
       {/* Hero */}
-      <section className="py-24 px-5 sm:px-8" style={{ background: 'var(--navy)' }}>
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <RevealSection>
-              <span className="inline-block px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-4"
-                style={{ background: 'rgba(201,168,76,0.15)', color: 'var(--gold)' }}>
-                {lang === 'ar' ? 'لأصحاب الملاعب' : 'For Court Owners'}
+      <section style={{ background: 'var(--navy)', padding: '96px 0' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px' }}>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+            gap: 56,
+            alignItems: 'center',
+          }}>
+            {/* Left — Benefits */}
+            <div>
+              <span style={{
+                display: 'inline-block', padding: '4px 14px', borderRadius: 999,
+                fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase',
+                background: 'rgba(226,255,103,0.12)', color: '#E2FF67', marginBottom: 20,
+              }}>
+                {isAr ? 'لأصحاب الملاعب' : 'For Court Owners'}
               </span>
-              <h1 className="font-bebas text-5xl md:text-7xl text-white mb-6">
-                {lang === 'ar' ? 'زِد إيرادات ملعبك' : 'Grow Your Court Revenue'}
+              <h1 style={{
+                fontFamily: isAr ? 'Cairo, sans-serif' : 'Barlow Condensed, sans-serif',
+                fontWeight: 900,
+                fontSize: 'clamp(40px, 6vw, 76px)',
+                color: 'white',
+                lineHeight: 1,
+                marginBottom: 20,
+              }}>
+                {isAr ? 'زِد إيرادات ملعبك' : 'Grow Your Court Revenue'}
               </h1>
-              <p className="text-base leading-relaxed mb-8" style={{ color: 'rgba(255,255,255,0.55)' }}>
-                {lang === 'ar'
-                  ? 'انضم لشبكة لعيبة أرينا واحصل على المزيد من الحجوزات، التحليلات، وإدارة مبسّطة.'
-                  : 'Join the La3ebeh Arena network and get more bookings, analytics, and simplified management.'}
+              <p style={{ fontSize: 15, lineHeight: 1.65, color: 'rgba(255,255,255,0.55)', marginBottom: 40, fontFamily: isAr ? 'Cairo, sans-serif' : undefined }}>
+                {isAr
+                  ? 'انضم لشبكة كورتنا واحصل على المزيد من الحجوزات، التحليلات، وإدارة مبسّطة.'
+                  : 'Join the Kortna network and get more bookings, analytics, and simplified management.'}
               </p>
-              <div className="grid grid-cols-2 gap-4">
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
                 {BENEFITS.map((b, i) => (
-                  <div key={i} className="rounded-2xl p-4"
-                    style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                    <div className="text-2xl mb-2">{b.icon}</div>
-                    <div className="font-semibold text-sm text-white mb-1">{lang === 'ar' ? b.ar.t : b.en.t}</div>
-                    <div className="text-xs" style={{ color: 'rgba(255,255,255,0.45)' }}>{lang === 'ar' ? b.ar.d : b.en.d}</div>
+                  <div key={i} style={{
+                    borderRadius: 16, padding: '20px 18px',
+                    background: 'rgba(255,255,255,0.05)',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                  }}>
+                    <div style={{ fontSize: 24, marginBottom: 8 }}>{b.icon}</div>
+                    <div style={{ fontWeight: 700, fontSize: 13, color: 'white', marginBottom: 4, fontFamily: isAr ? 'Cairo, sans-serif' : undefined }}>{isAr ? b.ar.t : b.en.t}</div>
+                    <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', lineHeight: 1.5, fontFamily: isAr ? 'Cairo, sans-serif' : undefined }}>{isAr ? b.ar.d : b.en.d}</div>
                   </div>
                 ))}
               </div>
-            </RevealSection>
+            </div>
 
-            {/* Partner form */}
-            <RevealSection delay={200}>
-              <div className="rounded-3xl p-8" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)' }}>
-                {done ? (
-                  <div className="text-center py-8">
-                    <div className="text-5xl mb-4">🎉</div>
-                    <h3 className="font-bebas text-3xl text-white mb-2">
-                      {lang === 'ar' ? 'شكراً لك!' : 'Thank You!'}
-                    </h3>
-                    <p style={{ color: 'rgba(255,255,255,0.5)' }}>
-                      {lang === 'ar' ? 'سنتواصل معك قريباً.' : "We'll be in touch soon."}
-                    </p>
-                  </div>
-                ) : (
-                  <>
-                    <h2 className="font-bebas text-3xl text-white mb-6">
-                      {lang === 'ar' ? 'أضف ملعبك' : 'List Your Court'}
-                    </h2>
-                    <form onSubmit={submit} className="space-y-4">
-                      {[
-                        { label: lang === 'ar' ? 'اسمك' : 'Your Name', value: name, set: setName, type: 'text', ph: lang === 'ar' ? 'الاسم الكامل' : 'Full name' },
-                        { label: lang === 'ar' ? 'البريد الإلكتروني' : 'Email', value: email, set: setEmail, type: 'email', ph: 'email@example.com' },
-                        { label: lang === 'ar' ? 'اسم الملعب' : 'Court Name', value: court, set: setCourt, type: 'text', ph: lang === 'ar' ? 'اسم ملعبك' : 'Your court name' },
-                      ].map(f => (
-                        <div key={f.label}>
-                          <label className="block text-xs font-semibold mb-1.5" style={{ color: 'rgba(255,255,255,0.6)' }}>{f.label}</label>
-                          <input type={f.type} required value={f.value} onChange={e => f.set(e.target.value)}
-                            placeholder={f.ph}
-                            className="w-full px-4 py-3 rounded-xl text-sm outline-none"
-                            style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.12)', color: 'white' }} />
-                        </div>
-                      ))}
-                      <MagneticButton type="submit" disabled={loading}
-                        className="w-full py-3 rounded-2xl font-semibold text-sm mt-2"
-                        style={{ background: 'var(--gold)', color: 'var(--navy)', opacity: loading ? 0.7 : 1 } as React.CSSProperties}>
-                        {loading ? '...' : (lang === 'ar' ? 'أرسل الطلب' : 'Submit Request')}
-                      </MagneticButton>
-                    </form>
-                  </>
-                )}
-              </div>
-            </RevealSection>
+            {/* Right — Form */}
+            <div style={{
+              borderRadius: 24, padding: 36,
+              background: 'rgba(255,255,255,0.04)',
+              border: '1px solid rgba(226,255,103,0.12)',
+              backdropFilter: 'blur(12px)',
+            }}>
+              {done ? (
+                <div style={{ textAlign: 'center', padding: '40px 0' }}>
+                  <div style={{ fontSize: 48, marginBottom: 16 }}>🎉</div>
+                  <h3 style={{
+                    fontFamily: isAr ? 'Cairo, sans-serif' : 'Barlow Condensed, sans-serif',
+                    fontWeight: 900, color: 'white', fontSize: 28, marginBottom: 8,
+                  }}>
+                    {isAr ? 'شكراً لك!' : 'Thank You!'}
+                  </h3>
+                  <p style={{ color: 'rgba(226,255,103,0.75)', fontSize: 14, fontFamily: isAr ? 'Cairo, sans-serif' : undefined }}>
+                    {isAr ? 'سنتواصل معك قريباً.' : "We'll be in touch soon."}
+                  </p>
+                </div>
+              ) : (
+                <>
+                  <h2 style={{
+                    fontFamily: isAr ? 'Cairo, sans-serif' : 'Barlow Condensed, sans-serif',
+                    fontWeight: 900, color: 'white', fontSize: 28, marginBottom: 24,
+                  }}>
+                    {isAr ? 'أضف ملعبك' : 'List Your Court'}
+                  </h2>
+                  <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                    {[
+                      { label: isAr ? 'اسمك' : 'Your Name', value: name, set: setName, type: 'text', ph: isAr ? 'الاسم الكامل' : 'Full name' },
+                      { label: isAr ? 'البريد الإلكتروني' : 'Email', value: email, set: setEmail, type: 'email', ph: 'email@example.com' },
+                      { label: isAr ? 'اسم الملعب' : 'Court Name', value: court, set: setCourt, type: 'text', ph: isAr ? 'اسم ملعبك' : 'Your court name' },
+                    ].map(f => (
+                      <div key={f.label}>
+                        <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'rgba(235,235,225,0.55)', marginBottom: 6, fontFamily: isAr ? 'Cairo, sans-serif' : undefined }}>
+                          {f.label}
+                        </label>
+                        <input
+                          type={f.type}
+                          required
+                          value={f.value}
+                          onChange={e => f.set(e.target.value)}
+                          placeholder={f.ph}
+                          className="venue-form-input"
+                          style={{ direction: isAr ? 'rtl' : 'ltr', fontFamily: isAr ? 'Cairo, sans-serif' : undefined }}
+                        />
+                      </div>
+                    ))}
+                    <KortnaButton
+                      type="submit"
+                      variant="primary"
+                      size="md"
+                      fullWidth
+                      disabled={loading}
+                      style={{ marginTop: 8, fontFamily: isAr ? 'Cairo, sans-serif' : 'Barlow, sans-serif' }}
+                    >
+                      {loading ? '...' : (isAr ? 'أرسل الطلب' : 'Submit Request')}
+                    </KortnaButton>
+                  </form>
+                </>
+              )}
+            </div>
           </div>
         </div>
       </section>

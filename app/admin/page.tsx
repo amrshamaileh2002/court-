@@ -15,19 +15,19 @@ type EnrichedBooking = Booking & {
   endTime: string
 }
 
-const STATUS_STYLES: Record<string, string> = {
-  confirmed: 'bg-emerald-100 text-emerald-700 border-emerald-200',
-  pending: 'bg-yellow-100 text-yellow-700 border-yellow-200',
-  cancelled: 'bg-red-100 text-red-700 border-red-200',
+const STATUS_COLORS: Record<string, { bg: string; color: string; border: string }> = {
+  confirmed: { bg: '#ecfdf5', color: '#065f46', border: '#6ee7b7' },
+  pending:   { bg: '#fffbeb', color: '#92400e', border: '#fcd34d' },
+  cancelled: { bg: '#fef2f2', color: '#991b1b', border: '#fca5a5' },
 }
 
 export default function AdminPage() {
   const { t, lang } = useLang()
   const [bookings, setBookings] = useState<EnrichedBooking[]>([])
   const [filter, setFilter] = useState<'all' | 'confirmed' | 'pending' | 'cancelled'>('all')
+  const isAr = lang === 'ar'
 
   useEffect(() => {
-    // Enrich mock bookings with slot/court info
     const enriched: EnrichedBooking[] = mockBookings.map((b) => {
       const slot = mockTimeSlots.find((s) => s.id === b.timeslot_id)
       const court = slot ? mockCourts.find((c) => c.id === slot.court_id) : undefined
@@ -44,7 +44,6 @@ export default function AdminPage() {
   }, [])
 
   const filteredBookings = filter === 'all' ? bookings : bookings.filter((b) => b.status === filter)
-
   const statusCounts = {
     all: bookings.length,
     confirmed: bookings.filter((b) => b.status === 'confirmed').length,
@@ -60,152 +59,138 @@ export default function AdminPage() {
   const formatDate = (dateStr: string) => {
     if (!dateStr) return '—'
     const d = new Date(dateStr + 'T00:00:00')
-    return d.toLocaleDateString(lang === 'ar' ? 'ar-JO' : 'en-GB', {
-      day: '2-digit', month: 'short', year: 'numeric'
-    })
+    return d.toLocaleDateString(isAr ? 'ar-JO' : 'en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
   }
 
+  const FILTERS = [
+    { key: 'all',       label: isAr ? 'الكل' : 'All',        bg: '#122744', color: 'white' },
+    { key: 'confirmed', label: isAr ? 'مؤكد' : 'Confirmed',  bg: '#ecfdf5', color: '#065f46' },
+    { key: 'pending',   label: isAr ? 'معلّق' : 'Pending',   bg: '#fffbeb', color: '#92400e' },
+    { key: 'cancelled', label: isAr ? 'ملغى' : 'Cancelled',  bg: '#fef2f2', color: '#991b1b' },
+  ]
+
   return (
-    <div className="flex flex-col min-h-screen bg-[#F8F9FB]">
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', background: 'var(--off-white)' }}>
       <Navbar />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1 w-full">
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '40px 24px 64px', width: '100%', flex: 1, boxSizing: 'border-box' }}>
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 16, marginBottom: 32 }}>
           <div>
-            <h1
-              className="text-3xl font-black text-[#0B1C2C]"
-              style={{ fontFamily: lang === 'ar' ? 'Tajawal, sans-serif' : 'DM Sans, sans-serif' }}
-            >
+            <h1 style={{
+              fontFamily: isAr ? 'Cairo, sans-serif' : 'Barlow Condensed, sans-serif',
+              fontWeight: 900, fontSize: 'clamp(32px, 4vw, 48px)',
+              color: 'var(--navy)', lineHeight: 1, marginBottom: 6,
+            }}>
               {t('adminPanel')}
             </h1>
-            <p className="text-gray-500 text-sm mt-1">
-              {lang === 'en' ? 'Manage all court bookings' : 'إدارة جميع حجوزات الملاعب'}
+            <p style={{ fontSize: 14, color: 'var(--text3)', fontFamily: isAr ? 'Cairo, sans-serif' : undefined }}>
+              {isAr ? 'إدارة جميع حجوزات الملاعب' : 'Manage all court bookings'}
             </p>
           </div>
-          <div className="flex items-center gap-2 bg-[#0B1C2C] text-white px-4 py-2 rounded-xl text-sm font-semibold">
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: 8,
+            background: 'var(--navy)', color: 'white',
+            padding: '10px 18px', borderRadius: 12, fontSize: 14, fontWeight: 600,
+          }}>
             <span>📊</span>
-            <span>{bookings.length} {lang === 'en' ? 'Total Bookings' : 'حجز إجمالي'}</span>
+            <span>{bookings.length} {isAr ? 'حجز إجمالي' : 'Total Bookings'}</span>
           </div>
         </div>
 
-        {/* Stats cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          {[
-            { key: 'all', label: lang === 'en' ? 'All' : 'الكل', color: 'bg-white border-gray-200', textColor: 'text-[#0B1C2C]' },
-            { key: 'confirmed', label: t('confirmed'), color: 'bg-emerald-50 border-emerald-200', textColor: 'text-emerald-700' },
-            { key: 'pending', label: t('pending'), color: 'bg-yellow-50 border-yellow-200', textColor: 'text-yellow-700' },
-            { key: 'cancelled', label: t('cancelled'), color: 'bg-red-50 border-red-200', textColor: 'text-red-600' },
-          ].map((card) => (
+        {/* Filter tabs */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginBottom: 24 }}>
+          {FILTERS.map(f => (
             <button
-              key={card.key}
-              onClick={() => setFilter(card.key as any)}
-              className={`${card.color} border-2 rounded-2xl p-4 text-start transition-all hover:shadow-md ${
-                filter === card.key ? 'ring-2 ring-[#1B6CA8] ring-offset-2' : ''
-              }`}
+              key={f.key}
+              onClick={() => setFilter(f.key as any)}
+              style={{
+                display: 'flex', alignItems: 'center', gap: 8,
+                padding: '10px 20px', borderRadius: 12, fontSize: 13, fontWeight: 700,
+                cursor: 'pointer', border: filter === f.key ? 'none' : '1.5px solid rgba(18,39,68,0.1)',
+                background: filter === f.key ? f.bg : 'white',
+                color: filter === f.key ? f.color : 'var(--text2)',
+                boxShadow: filter === f.key ? '0 4px 12px rgba(18,39,68,0.15)' : 'none',
+                transition: 'all 0.2s ease',
+                fontFamily: isAr ? 'Cairo, sans-serif' : undefined,
+              }}
             >
-              <div className={`text-2xl font-black ${card.textColor}`}>
-                {statusCounts[card.key as keyof typeof statusCounts]}
-              </div>
-              <div className="text-sm text-gray-500 mt-0.5 font-medium">{card.label}</div>
+              <span style={{ fontSize: 20, fontWeight: 900, fontFamily: 'Barlow Condensed, sans-serif' }}>
+                {statusCounts[f.key as keyof typeof statusCounts]}
+              </span>
+              <span>{f.label}</span>
             </button>
           ))}
         </div>
 
         {/* Table */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-            <h2
-              className="text-lg font-bold text-[#0B1C2C]"
-              style={{ fontFamily: lang === 'ar' ? 'Tajawal, sans-serif' : 'DM Sans, sans-serif' }}
-            >
+        <div style={{ background: 'white', borderRadius: 20, border: '1px solid rgba(18,39,68,0.08)', overflow: 'hidden', boxShadow: '0 4px 16px rgba(18,39,68,0.06)' }}>
+          <div style={{ padding: '20px 24px', borderBottom: '1px solid rgba(18,39,68,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <h2 style={{ fontFamily: isAr ? 'Cairo, sans-serif' : 'Barlow Condensed, sans-serif', fontWeight: 700, fontSize: 18, color: 'var(--navy)' }}>
               {t('allBookings')}
             </h2>
-            <span className="text-sm text-gray-400">{filteredBookings.length} {lang === 'en' ? 'entries' : 'سجل'}</span>
+            <span style={{ fontSize: 13, color: 'var(--text3)' }}>{filteredBookings.length} {isAr ? 'سجل' : 'entries'}</span>
           </div>
 
           {filteredBookings.length === 0 ? (
-            <div className="py-16 text-center text-gray-400">
-              <span className="text-4xl block mb-3">📋</span>
-              <p>{t('noBookings')}</p>
+            <div style={{ padding: '64px 0', textAlign: 'center', color: 'var(--text3)' }}>
+              <span style={{ fontSize: 40, display: 'block', marginBottom: 12 }}>📋</span>
+              <p style={{ fontFamily: isAr ? 'Cairo, sans-serif' : undefined }}>{t('noBookings')}</p>
             </div>
           ) : (
-            <>
-              {/* Desktop table */}
-              <div className="hidden md:block overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="bg-gray-50 text-gray-500 text-xs uppercase tracking-wide">
-                      <th className="text-start px-6 py-3 font-semibold">{t('bookingId')}</th>
-                      <th className="text-start px-6 py-3 font-semibold">{t('courtName')}</th>
-                      <th className="text-start px-6 py-3 font-semibold">{t('slotDate')}</th>
-                      <th className="text-start px-6 py-3 font-semibold">{t('slotTime')}</th>
-                      <th className="text-start px-6 py-3 font-semibold">{t('userName')}</th>
-                      <th className="text-start px-6 py-3 font-semibold">{t('userWhatsapp')}</th>
-                      <th className="text-start px-6 py-3 font-semibold">{t('status')}</th>
-                      <th className="text-start px-6 py-3 font-semibold">{t('createdAt')}</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-50">
-                    {filteredBookings.map((booking, idx) => (
-                      <tr key={booking.id} className={`hover:bg-gray-50/50 transition-colors ${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50/30'}`}>
-                        <td className="px-6 py-4">
-                          <span className="font-mono text-xs text-[#1B6CA8] bg-[#1B6CA8]/10 px-2 py-1 rounded-lg">
+            <div style={{ overflowX: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+                <thead>
+                  <tr style={{ background: '#f8f9fb' }}>
+                    {[t('bookingId'), t('courtName'), t('slotDate'), t('slotTime'), t('userName'), t('userWhatsapp'), t('status'), t('createdAt')].map(h => (
+                      <th key={h} style={{ padding: '12px 16px', textAlign: isAr ? 'right' : 'left', fontWeight: 600, fontSize: 11, color: 'var(--text3)', textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap', fontFamily: isAr ? 'Cairo, sans-serif' : undefined }}>
+                        {h}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredBookings.map((booking, idx) => {
+                    const sc = STATUS_COLORS[booking.status] || STATUS_COLORS.pending
+                    return (
+                      <tr key={booking.id} style={{ background: idx % 2 === 0 ? 'white' : 'rgba(248,249,251,0.5)', borderTop: '1px solid rgba(18,39,68,0.05)' }}>
+                        <td style={{ padding: '14px 16px' }}>
+                          <span style={{ fontFamily: 'monospace', fontSize: 11, color: 'var(--blue)', background: 'rgba(22,69,211,0.08)', padding: '3px 8px', borderRadius: 6 }}>
                             {booking.id}
                           </span>
                         </td>
-                        <td className="px-6 py-4">
-                          <div className="flex items-center gap-1.5">
+                        <td style={{ padding: '14px 16px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontWeight: 600, color: 'var(--navy)', whiteSpace: 'nowrap' }}>
                             <span>{SPORT_EMOJIS[booking.sport] || '🏟️'}</span>
-                            <span className="font-medium text-[#0B1C2C]">{booking.courtName}</span>
+                            {booking.courtName}
                           </div>
                         </td>
-                        <td className="px-6 py-4 text-gray-600">{formatDate(booking.date)}</td>
-                        <td className="px-6 py-4 text-gray-600 font-mono text-xs">
+                        <td style={{ padding: '14px 16px', color: 'var(--text2)', whiteSpace: 'nowrap' }}>{formatDate(booking.date)}</td>
+                        <td style={{ padding: '14px 16px', color: 'var(--text2)', fontFamily: 'monospace', fontSize: 12, whiteSpace: 'nowrap' }}>
                           {booking.startTime} – {booking.endTime}
                         </td>
-                        <td className="px-6 py-4 font-medium text-[#0B1C2C]">{booking.user_name}</td>
-                        <td className="px-6 py-4 text-gray-600 font-mono text-xs" dir="ltr">{booking.user_whatsapp}</td>
-                        <td className="px-6 py-4">
-                          <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold border ${STATUS_STYLES[booking.status] || STATUS_STYLES.pending}`}>
+                        <td style={{ padding: '14px 16px', fontWeight: 600, color: 'var(--navy)', whiteSpace: 'nowrap' }}>{booking.user_name}</td>
+                        <td style={{ padding: '14px 16px', color: 'var(--text2)', fontFamily: 'monospace', fontSize: 12, direction: 'ltr', whiteSpace: 'nowrap' }}>{booking.user_whatsapp}</td>
+                        <td style={{ padding: '14px 16px' }}>
+                          <span style={{
+                            display: 'inline-block', padding: '4px 10px', borderRadius: 999,
+                            fontSize: 11, fontWeight: 700,
+                            background: sc.bg, color: sc.color,
+                            border: `1px solid ${sc.border}`,
+                            fontFamily: isAr ? 'Cairo, sans-serif' : undefined,
+                          }}>
                             {t(booking.status as any)}
                           </span>
                         </td>
-                        <td className="px-6 py-4 text-gray-400 text-xs">
-                          {new Date(booking.created_at).toLocaleDateString(lang === 'ar' ? 'ar-JO' : 'en-GB')}
+                        <td style={{ padding: '14px 16px', color: 'var(--text3)', fontSize: 12, whiteSpace: 'nowrap' }}>
+                          {new Date(booking.created_at).toLocaleDateString(isAr ? 'ar-JO' : 'en-GB')}
                         </td>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              {/* Mobile cards */}
-              <div className="md:hidden divide-y divide-gray-100">
-                {filteredBookings.map((booking) => (
-                  <div key={booking.id} className="p-4 space-y-2">
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <div className="flex items-center gap-1.5 mb-0.5">
-                          <span>{SPORT_EMOJIS[booking.sport] || '🏟️'}</span>
-                          <span className="font-bold text-[#0B1C2C] text-sm">{booking.courtName}</span>
-                        </div>
-                        <span className="font-mono text-xs text-[#1B6CA8]">{booking.id}</span>
-                      </div>
-                      <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold border ${STATUS_STYLES[booking.status] || STATUS_STYLES.pending}`}>
-                        {t(booking.status as any)}
-                      </span>
-                    </div>
-                    <div className="grid grid-cols-2 gap-1 text-xs text-gray-500">
-                      <span>📅 {formatDate(booking.date)}</span>
-                      <span>⏰ {booking.startTime}–{booking.endTime}</span>
-                      <span>👤 {booking.user_name}</span>
-                      <span dir="ltr">📱 {booking.user_whatsapp}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
       </div>

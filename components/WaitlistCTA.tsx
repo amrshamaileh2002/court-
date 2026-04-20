@@ -1,11 +1,10 @@
 'use client'
 import { useState } from 'react'
-import RevealSection from './RevealSection'
-import MagneticButton from './MagneticButton'
+import KortnaButton from './KortnaButton'
 import { useLang } from '@/context/LanguageContext'
 
 function fireConfetti() {
-  const colors = ['#C9A84C', '#F5D98A', '#0B1C2C', '#ffffff']
+  const colors = ['#E2FF67', '#1645D3', '#8BC4DE', '#ffffff']
   for (let i = 0; i < 60; i++) {
     const el = document.createElement('div')
     el.className = 'confetti-particle'
@@ -20,6 +19,7 @@ export default function WaitlistCTA() {
   const [email, setEmail] = useState('')
   const [done, setDone] = useState(false)
   const [loading, setLoading] = useState(false)
+  const isAr = lang === 'ar'
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -32,64 +32,75 @@ export default function WaitlistCTA() {
   }
 
   return (
-    <section className="py-28 px-5 sm:px-8 relative overflow-hidden" style={{ background: 'var(--off-white)' }}>
-      <div className="glow-orb" style={{ top: '20%', left: '10%', width: 400, height: 400, background: 'radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 70%)' }} />
-      <div className="max-w-2xl mx-auto text-center relative z-10">
-        <RevealSection>
-          <div className="text-5xl mb-6">🚀</div>
-          <h2 className="font-bebas text-5xl md:text-7xl mb-4" style={{ color: 'var(--navy)' }}>
-            {lang === 'ar' ? 'كن أول من يعرف' : 'Be First to Know'}
-          </h2>
-          <p className="text-base mb-8 leading-relaxed" style={{ color: 'var(--text2)' }}>
-            {lang === 'ar'
-              ? 'لعيبة أرينا قادمة في 2025. سجّل بريدك الآن للحصول على وصول مبكر وعروض حصرية.'
-              : 'La3ebeh Arena launches in 2025. Join the waitlist for early access and exclusive launch offers.'}
-          </p>
+    <section style={{ background: 'var(--off-white)', padding: '112px 0', position: 'relative', overflow: 'hidden' }}>
+      <div className="glow-orb" style={{ top: '20%', left: '10%', width: 400, height: 400, background: 'radial-gradient(circle, rgba(22,69,211,0.05) 0%, transparent 70%)' }} />
+      <div style={{ maxWidth: 640, margin: '0 auto', padding: '0 24px', textAlign: 'center', position: 'relative', zIndex: 1 }}>
+        <div style={{ fontSize: 48, marginBottom: 24 }}>🚀</div>
+        <h2 style={{
+          fontFamily: isAr ? 'Cairo, sans-serif' : 'Barlow Condensed, sans-serif',
+          fontWeight: 900, fontSize: 'clamp(40px, 7vw, 72px)',
+          color: 'var(--navy)', lineHeight: 1, marginBottom: 16,
+        }}>
+          {isAr ? 'كن أول من يعرف' : 'Be First to Know'}
+        </h2>
+        <p style={{ fontSize: 15, lineHeight: 1.65, color: 'var(--text2)', marginBottom: 40, fontFamily: isAr ? 'Cairo, sans-serif' : undefined }}>
+          {isAr
+            ? 'كورتنا قادمة. سجّل بريدك الآن للحصول على وصول مبكر وعروض حصرية.'
+            : 'Kortna launches soon. Join the waitlist for early access and exclusive launch offers.'}
+        </p>
 
-          {done ? (
-            <div className="rounded-2xl p-8" style={{ background: 'var(--navy)' }}>
-              <div className="text-4xl mb-3">🎉</div>
-              <div className="font-bebas text-3xl text-white mb-1">
-                {lang === 'ar' ? 'أنت في القائمة!' : "You're on the list!"}
-              </div>
-              <div className="text-sm" style={{ color: 'rgba(255,255,255,0.5)' }}>
-                {lang === 'ar' ? 'سنعلمك عند الإطلاق.' : "We'll notify you at launch."}
-              </div>
+        {done ? (
+          <div style={{ borderRadius: 20, padding: '32px 28px', background: 'rgba(22,69,211,0.06)', border: '1px solid rgba(22,69,211,0.15)' }}>
+            <div style={{ fontSize: 36, marginBottom: 12 }}>🎉</div>
+            <div style={{ fontFamily: isAr ? 'Cairo, sans-serif' : 'Barlow Condensed, sans-serif', fontWeight: 900, color: 'var(--navy)', fontSize: 26, marginBottom: 6 }}>
+              {isAr ? 'أنت في القائمة!' : "You're on the list!"}
             </div>
-          ) : (
-            <form onSubmit={submit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                placeholder={lang === 'ar' ? 'بريدك الإلكتروني' : 'your@email.com'}
-                className="flex-1 px-5 py-3 rounded-2xl text-sm outline-none"
-                style={{ background: 'white', border: '1.5px solid rgba(11,28,44,0.15)', color: 'var(--navy)', direction: lang === 'ar' ? 'rtl' : 'ltr' }}
-              />
-              <MagneticButton
-                type="submit"
-                disabled={loading}
-                className="px-7 py-3 rounded-2xl font-semibold text-sm whitespace-nowrap"
-                style={{ background: 'var(--gold)', color: 'var(--navy)', opacity: loading ? 0.7 : 1 } as React.CSSProperties}>
-                {loading ? '...' : (lang === 'ar' ? 'انضم' : 'Join Now')}
-              </MagneticButton>
-            </form>
-          )}
-
-          <div className="flex items-center justify-center gap-6 mt-8 flex-wrap">
-            {[
-              { n: '1,200+', l: lang === 'ar' ? 'في القائمة' : 'on waitlist' },
-              { n: '200+',   l: lang === 'ar' ? 'ملعب شريك' : 'partner courts' },
-              { n: '2025',   l: lang === 'ar' ? 'إطلاق' : 'launch year' },
-            ].map(s => (
-              <div key={s.n} className="text-center">
-                <div className="font-bebas text-2xl" style={{ color: 'var(--navy)' }}>{s.n}</div>
-                <div className="text-xs" style={{ color: 'var(--text3)' }}>{s.l}</div>
-              </div>
-            ))}
+            <div style={{ fontSize: 13, color: 'var(--text3)', fontFamily: isAr ? 'Cairo, sans-serif' : undefined }}>
+              {isAr ? 'سنعلمك عند الإطلاق.' : "We'll notify you at launch."}
+            </div>
           </div>
-        </RevealSection>
+        ) : (
+          <form onSubmit={submit} style={{ display: 'flex', gap: 10, maxWidth: 440, margin: '0 auto' }}>
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              placeholder={isAr ? 'بريدك الإلكتروني' : 'your@email.com'}
+              style={{
+                flex: 1, padding: '14px 18px', borderRadius: 14, fontSize: 14,
+                outline: 'none',
+                background: 'white',
+                border: '1.5px solid rgba(18,39,68,0.15)',
+                color: 'var(--navy)',
+                direction: isAr ? 'rtl' : 'ltr',
+                fontFamily: isAr ? 'Cairo, sans-serif' : undefined,
+              }}
+            />
+            <KortnaButton
+              type="submit"
+              variant="primary"
+              size="md"
+              disabled={loading}
+              style={{ whiteSpace: 'nowrap', fontFamily: isAr ? 'Cairo, sans-serif' : undefined }}
+            >
+              {loading ? '...' : (isAr ? 'انضم' : 'Join Now')}
+            </KortnaButton>
+          </form>
+        )}
+
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 40, marginTop: 40, flexWrap: 'wrap' }}>
+          {[
+            { n: '1,200+', l: isAr ? 'في القائمة' : 'on waitlist' },
+            { n: '200+', l: isAr ? 'ملعب شريك' : 'partner courts' },
+            { n: '2026', l: isAr ? 'إطلاق' : 'launch year' },
+          ].map(s => (
+            <div key={s.n} style={{ textAlign: 'center' }}>
+              <div style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 900, fontSize: 28, color: 'var(--navy)' }}>{s.n}</div>
+              <div style={{ fontSize: 12, color: 'var(--text3)' }}>{s.l}</div>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   )

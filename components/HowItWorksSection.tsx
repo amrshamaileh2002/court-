@@ -1,5 +1,4 @@
 'use client'
-import RevealSection from './RevealSection'
 import { useLang } from '@/context/LanguageContext'
 
 const STEPS = [
@@ -11,43 +10,64 @@ const STEPS = [
 
 export default function HowItWorksSection() {
   const { lang } = useLang()
+  const isAr = lang === 'ar'
+
   return (
-    <section id="how-it-works" className="py-24 px-5 sm:px-8" style={{ background: 'var(--navy)' }}>
-      <div className="max-w-7xl mx-auto">
-        <RevealSection>
-          <div className="text-center mb-16">
-            <span className="inline-block px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-4"
-              style={{ background: 'rgba(201,168,76,0.15)', color: 'var(--gold)' }}>
-              {lang === 'ar' ? 'كيف يعمل' : 'How It Works'}
-            </span>
-            <h2 className="font-bebas text-5xl md:text-6xl text-white">
-              {lang === 'ar' ? 'أربع خطوات بسيطة' : 'Four Simple Steps'}
-            </h2>
-          </div>
-        </RevealSection>
+    <section id="how-it-works" style={{ background: 'var(--navy)', padding: '96px 0' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px' }}>
+        <div style={{ textAlign: 'center', marginBottom: 64 }}>
+          <span style={{
+            display: 'inline-block', padding: '4px 14px', borderRadius: 999,
+            fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' as const,
+            background: 'rgba(226,255,103,0.12)', color: '#E2FF67', marginBottom: 16,
+          }}>
+            {isAr ? 'كيف يعمل' : 'How It Works'}
+          </span>
+          <h2 style={{
+            fontFamily: isAr ? 'Cairo, sans-serif' : 'Barlow Condensed, sans-serif',
+            fontWeight: 900, fontSize: 'clamp(36px, 5vw, 64px)',
+            color: 'white', lineHeight: 1,
+          }}>
+            {isAr ? 'أربع خطوات بسيطة' : 'Four Simple Steps'}
+          </h2>
+        </div>
 
-        <div className="relative grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* SVG connector line — desktop only */}
-          <div className="hidden md:block absolute top-12 left-[12.5%] right-[12.5%] h-px"
-            style={{ background: 'linear-gradient(90deg, transparent, var(--gold), transparent)', opacity: 0.3 }} />
-
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+          gap: 32,
+        }}>
           {STEPS.map((step, i) => (
-            <RevealSection key={i} delay={i * 120}>
-              <div className="flex flex-col items-center text-center group">
-                <div className="relative w-20 h-20 rounded-2xl flex items-center justify-center mb-5 transition-transform duration-300 group-hover:-translate-y-2"
-                  style={{ background: 'rgba(201,168,76,0.1)', border: '1px solid rgba(201,168,76,0.3)' }}>
-                  <span className="text-3xl">{step.icon}</span>
-                  <span className="absolute -top-3 -right-3 font-bebas text-xs w-7 h-7 rounded-full flex items-center justify-center"
-                    style={{ background: 'var(--gold)', color: 'var(--navy)' }}>{step.num}</span>
-                </div>
-                <h3 className="font-bebas text-2xl text-white mb-2">
-                  {lang === 'ar' ? step.ar.title : step.en.title}
-                </h3>
-                <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>
-                  {lang === 'ar' ? step.ar.desc : step.en.desc}
-                </p>
+            <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+              <div style={{
+                position: 'relative',
+                width: 80, height: 80, borderRadius: 20, flexShrink: 0,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                marginBottom: 20,
+                background: 'rgba(226,255,103,0.08)',
+                border: '1.5px solid rgba(226,255,103,0.25)',
+              }}>
+                <span style={{ fontSize: 32 }}>{step.icon}</span>
+                <span style={{
+                  position: 'absolute', top: -10, right: -10,
+                  fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 900, fontSize: 11,
+                  width: 26, height: 26, borderRadius: '50%',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  background: '#E2FF67', color: '#122744',
+                }}>
+                  {step.num}
+                </span>
               </div>
-            </RevealSection>
+              <h3 style={{
+                fontFamily: isAr ? 'Cairo, sans-serif' : 'Barlow Condensed, sans-serif',
+                fontWeight: 900, fontSize: 22, color: 'white', marginBottom: 8,
+              }}>
+                {isAr ? step.ar.title : step.en.title}
+              </h3>
+              <p style={{ fontSize: 13, lineHeight: 1.65, color: 'rgba(255,255,255,0.5)', fontFamily: isAr ? 'Cairo, sans-serif' : undefined }}>
+                {isAr ? step.ar.desc : step.en.desc}
+              </p>
+            </div>
           ))}
         </div>
       </div>
