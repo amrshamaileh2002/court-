@@ -1,76 +1,93 @@
 'use client'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
 import { useLang } from '@/context/LanguageContext'
+import KortnaButton from './KortnaButton'
 
 const HeroScene = dynamic(() => import('@/components/3d/HeroScene'), {
   ssr: false,
-  loading: () => <div className="hero-canvas" style={{ background: 'linear-gradient(135deg, #122744 0%, #080f20 100%)' }} />,
+  loading: () => (
+    <div className="hero-canvas" style={{ background: 'linear-gradient(135deg, #122744 0%, #080f20 100%)' }} />
+  ),
 })
 
 export default function KortnaHero() {
   const { t, lang } = useLang()
   const [visible, setVisible] = useState(false)
-  const badgeRef = useRef<HTMLDivElement>(null)
+  const isAr = lang === 'ar'
 
   useEffect(() => {
-    const timer = setTimeout(() => setVisible(true), 200)
+    const timer = setTimeout(() => setVisible(true), 150)
     return () => clearTimeout(timer)
   }, [])
 
-  const isAr = lang === 'ar'
+  const scrollTo = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+  }
 
   return (
     <section
-      className="relative min-h-screen w-full overflow-hidden flex flex-col"
-      style={{ background: 'linear-gradient(135deg, #122744 0%, #0a1a35 50%, #080f20 100%)' }}
+      className="relative w-full overflow-hidden flex flex-col"
+      style={{
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #122744 0%, #0a1a35 55%, #07101e 100%)',
+      }}
     >
-      {/* 3D Background */}
-      <div className="absolute inset-0 opacity-60">
+      {/* 3D canvas */}
+      <div className="absolute inset-0" style={{ opacity: 0.55 }}>
         <HeroScene />
       </div>
 
-      {/* Gradient overlays */}
+      {/* Gradient vignettes */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute bottom-0 left-0 right-0 h-64"
+        <div className="absolute inset-x-0 bottom-0 h-56"
           style={{ background: 'linear-gradient(to top, #122744, transparent)' }} />
-        <div className="absolute top-0 left-0 right-0 h-32"
-          style={{ background: 'linear-gradient(to bottom, rgba(18,39,68,0.6), transparent)' }} />
+        <div className="absolute inset-x-0 top-0 h-24"
+          style={{ background: 'linear-gradient(to bottom, rgba(18,39,68,0.7), transparent)' }} />
+        <div className="absolute inset-y-0 left-0 w-32"
+          style={{ background: 'linear-gradient(to right, rgba(18,39,68,0.4), transparent)' }} />
+        <div className="absolute inset-y-0 right-0 w-32"
+          style={{ background: 'linear-gradient(to left, rgba(18,39,68,0.4), transparent)' }} />
       </div>
 
-      {/* Dot grid overlay */}
-      <div className="absolute inset-0 dot-grid opacity-30 pointer-events-none" />
+      {/* Dot grid */}
+      <div className="absolute inset-0 dot-grid pointer-events-none" style={{ opacity: 0.2 }} />
 
-      {/* Content */}
-      <div className="relative z-10 flex flex-1 flex-col items-center justify-center text-center px-5 sm:px-8 pt-24 pb-20">
-
+      {/* ── Main content ── */}
+      <div
+        className="relative z-10 flex flex-1 flex-col items-center justify-center text-center px-5 sm:px-8"
+        style={{ paddingTop: '6rem', paddingBottom: '5rem' }}
+      >
         {/* Badge */}
         <div
-          ref={badgeRef}
-          className="hero-badge inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-widest mb-8"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-widest mb-10"
           style={{
-            background: 'rgba(226,255,103,0.12)',
-            border: '1px solid rgba(226,255,103,0.3)',
+            background: 'rgba(226,255,103,0.1)',
+            border: '1px solid rgba(226,255,103,0.25)',
             color: '#E2FF67',
+            backdropFilter: 'blur(8px)',
             opacity: visible ? 1 : 0,
-            transform: visible ? 'translateY(0)' : 'translateY(-12px)',
-            transition: 'opacity 0.6s ease, transform 0.6s ease',
+            transform: visible ? 'translateY(0)' : 'translateY(-10px)',
+            transition: 'opacity 0.5s ease, transform 0.5s ease',
           }}
         >
-          <span className="w-1.5 h-1.5 rounded-full bg-lime-400 animate-pulse" style={{ background: '#E2FF67' }} />
-          {isAr ? 'الأردن 2026 — إطلاق قريب' : 'Jordan 2026 — Launching Soon'}
+          <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#E2FF67', flexShrink: 0, display: 'inline-block', animation: 'pulse-dot 2s ease-in-out infinite' }} />
+          {isAr ? 'إطلاق قريب · الأردن 2026' : 'Launching Soon · Jordan 2026'}
         </div>
 
         {/* Headline */}
         <h1
-          className="font-barlow-cond font-black text-white mb-6 leading-none"
           style={{
-            fontSize: 'clamp(64px, 12vw, 140px)',
-            letterSpacing: '-0.02em',
-            opacity: visible ? 1 : 0,
-            transform: visible ? 'translateY(0)' : 'translateY(24px)',
-            transition: 'opacity 0.7s ease 0.1s, transform 0.7s ease 0.1s',
+            fontSize: 'clamp(52px, 10vw, 120px)',
             fontFamily: isAr ? 'Cairo, sans-serif' : 'Barlow Condensed, sans-serif',
+            fontWeight: 900,
+            lineHeight: 0.95,
+            letterSpacing: isAr ? '-0.01em' : '-0.03em',
+            color: 'white',
+            marginBottom: '1.5rem',
+            opacity: visible ? 1 : 0,
+            transform: visible ? 'translateY(0)' : 'translateY(28px)',
+            transition: 'opacity 0.65s ease 0.1s, transform 0.65s ease 0.1s',
           }}
         >
           {isAr ? (
@@ -80,80 +97,86 @@ export default function KortnaHero() {
           )}
         </h1>
 
-        {/* Subtitle */}
+        {/* Sub */}
         <p
-          className="text-lg sm:text-xl md:text-2xl max-w-2xl mb-10 leading-relaxed"
           style={{
-            color: 'rgba(235,235,225,0.75)',
+            fontSize: 'clamp(15px, 2vw, 20px)',
+            color: 'rgba(235,235,225,0.65)',
+            maxWidth: 520,
+            lineHeight: 1.65,
+            marginBottom: '2.5rem',
+            fontFamily: isAr ? 'Cairo, sans-serif' : 'Barlow, sans-serif',
+            fontWeight: 400,
             opacity: visible ? 1 : 0,
             transform: visible ? 'translateY(0)' : 'translateY(20px)',
-            transition: 'opacity 0.7s ease 0.25s, transform 0.7s ease 0.25s',
-            fontFamily: isAr ? 'Cairo, sans-serif' : undefined,
+            transition: 'opacity 0.65s ease 0.22s, transform 0.65s ease 0.22s',
           }}
         >
           {t('heroSubtitle')}
         </p>
 
-        {/* CTAs */}
+        {/* CTA row */}
         <div
-          className="flex flex-col sm:flex-row gap-4 items-center"
+          className="flex flex-col sm:flex-row gap-3 items-center"
           style={{
             opacity: visible ? 1 : 0,
-            transform: visible ? 'translateY(0)' : 'translateY(20px)',
-            transition: 'opacity 0.7s ease 0.4s, transform 0.7s ease 0.4s',
+            transform: visible ? 'translateY(0)' : 'translateY(18px)',
+            transition: 'opacity 0.65s ease 0.34s, transform 0.65s ease 0.34s',
           }}
         >
-          <button
+          <KortnaButton
+            variant="primary"
+            size="lg"
             onClick={() => window.location.href = '/courts'}
-            className="px-8 py-4 rounded-2xl font-bold text-base transition-all hover:scale-105 active:scale-95"
-            style={{
-              background: '#E2FF67',
-              color: '#122744',
-              fontFamily: isAr ? 'Cairo, sans-serif' : 'Barlow, sans-serif',
-              boxShadow: '0 0 30px rgba(226,255,103,0.3)',
-            }}
+            style={{ fontFamily: isAr ? 'Cairo, sans-serif' : 'Barlow, sans-serif', minWidth: 180 }}
           >
             {t('bookNow')}
-          </button>
-          <button
-            onClick={() => {
-              const el = document.getElementById('for-venues')
-              el?.scrollIntoView({ behavior: 'smooth' })
-            }}
-            className="px-8 py-4 rounded-2xl font-bold text-base transition-all hover:scale-105 active:scale-95"
-            style={{
-              background: 'rgba(255,255,255,0.08)',
-              color: 'white',
-              border: '1px solid rgba(255,255,255,0.2)',
-              fontFamily: isAr ? 'Cairo, sans-serif' : 'Barlow, sans-serif',
-              backdropFilter: 'blur(8px)',
-            }}
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transform: isAr ? 'rotate(180deg)' : 'none' }}>
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </KortnaButton>
+
+          <KortnaButton
+            variant="secondary"
+            size="lg"
+            onClick={() => scrollTo('for-venues')}
+            style={{ fontFamily: isAr ? 'Cairo, sans-serif' : 'Barlow, sans-serif', minWidth: 180 }}
           >
             {t('heroCta2')}
-          </button>
+          </KortnaButton>
         </div>
 
-        {/* Stats row */}
+        {/* Stats strip */}
         <div
-          className="flex items-center gap-8 sm:gap-12 mt-16 flex-wrap justify-center"
+          className="flex items-center gap-10 sm:gap-16 mt-16 flex-wrap justify-center"
           style={{
             opacity: visible ? 1 : 0,
-            transition: 'opacity 0.8s ease 0.6s',
+            transition: 'opacity 0.8s ease 0.55s',
           }}
         >
           {[
             { n: '100+', l: isAr ? 'ملعب شريك' : 'Partner Courts' },
             { n: '10K+', l: isAr ? 'لاعب نشط' : 'Active Players' },
             { n: '50K+', l: isAr ? 'حجز تم' : 'Bookings Made' },
-          ].map(s => (
-            <div key={s.n} className="text-center">
-              <div
-                className="font-barlow-cond font-black text-3xl sm:text-4xl"
-                style={{ color: '#E2FF67', fontFamily: 'Barlow Condensed, sans-serif' }}
-              >
+          ].map((s, i) => (
+            <div key={s.n} className="text-center" style={{ animationDelay: `${i * 100}ms` }}>
+              <div style={{
+                fontFamily: 'Barlow Condensed, sans-serif',
+                fontWeight: 900,
+                fontSize: 'clamp(28px, 4vw, 42px)',
+                color: '#E2FF67',
+                lineHeight: 1,
+              }}>
                 {s.n}
               </div>
-              <div className="text-xs mt-1" style={{ color: 'rgba(235,235,225,0.5)', fontFamily: isAr ? 'Cairo, sans-serif' : undefined }}>
+              <div style={{
+                fontSize: 11,
+                marginTop: 4,
+                color: 'rgba(235,235,225,0.45)',
+                fontFamily: isAr ? 'Cairo, sans-serif' : 'Barlow, sans-serif',
+                letterSpacing: '0.05em',
+                textTransform: 'uppercase',
+              }}>
                 {s.l}
               </div>
             </div>
@@ -161,11 +184,18 @@ export default function KortnaHero() {
         </div>
       </div>
 
-      {/* Scroll indicator */}
-      <div className="scroll-chevron hidden sm:block">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <path d="M6 9l6 6 6-6" stroke="rgba(226,255,103,0.6)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
+      {/* Scroll cue */}
+      <div
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+        style={{
+          opacity: visible ? 0.5 : 0,
+          transition: 'opacity 1s ease 1s',
+        }}
+      >
+        <span style={{ fontSize: 9, color: 'white', letterSpacing: '0.15em', textTransform: 'uppercase', fontFamily: 'Barlow, sans-serif' }}>
+          {isAr ? 'تمرير' : 'Scroll'}
+        </span>
+        <div style={{ width: 1, height: 32, background: 'linear-gradient(to bottom, white, transparent)' }} />
       </div>
     </section>
   )

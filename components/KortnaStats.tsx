@@ -23,22 +23,28 @@ function StatItem({ value, suffix, label, started, delay }: { value: number; suf
   const [go, setGo] = useState(false)
   useEffect(() => { if (started) { const t = setTimeout(() => setGo(true), delay); return () => clearTimeout(t) } }, [started, delay])
   const count = useCountUp(value, 1.8, go)
+
   return (
-    <div
-      className="text-center"
-      style={{
-        opacity: started ? 1 : 0,
-        transform: started ? 'translateY(0)' : 'translateY(24px)',
-        transition: `opacity 0.6s ease ${delay}ms, transform 0.6s ease ${delay}ms`,
-      }}
-    >
-      <div
-        className="font-barlow-cond font-black mb-2"
-        style={{ fontSize: 'clamp(48px,6vw,80px)', color: 'var(--navy)', fontFamily: 'Barlow Condensed, sans-serif', lineHeight: 1 }}
-      >
+    <div style={{
+      textAlign: 'center',
+      padding: '0 12px',
+      opacity: started ? 1 : 0,
+      transform: started ? 'translateY(0)' : 'translateY(24px)',
+      transition: `opacity 0.6s ease ${delay}ms, transform 0.6s ease ${delay}ms`,
+    }}>
+      <div style={{
+        fontFamily: 'Barlow Condensed, sans-serif',
+        fontWeight: 900,
+        fontSize: 'clamp(44px, 5.5vw, 72px)',
+        color: 'var(--navy)',
+        lineHeight: 1,
+        marginBottom: 8,
+      }}>
         {count.toLocaleString()}{suffix}
       </div>
-      <div className="text-sm font-medium" style={{ color: 'var(--text3)' }}>{label}</div>
+      <div style={{ fontSize: 13, color: 'var(--text3)', fontWeight: 500, letterSpacing: '0.03em' }}>
+        {label}
+      </div>
     </div>
   )
 }
@@ -60,57 +66,66 @@ export default function KortnaStats() {
 
   const stats = [
     { value: 100,   suffix: '+',  label: t('statsCourts'),   delay: 0 },
-    { value: 10000, suffix: '+',  label: t('statsPlayers'),  delay: 150 },
-    { value: 50000, suffix: '+',  label: t('statsBookings'), delay: 300 },
-    { value: 48,    suffix: '/5', label: t('statsRating'),   delay: 450 },
+    { value: 10000, suffix: '+',  label: t('statsPlayers'),  delay: 120 },
+    { value: 50000, suffix: '+',  label: t('statsBookings'), delay: 240 },
+    { value: 48,    suffix: '/5', label: t('statsRating'),   delay: 360 },
   ]
 
   return (
-    <section className="py-24 px-5 sm:px-8" style={{ background: 'white' }}>
-      <div className="max-w-7xl mx-auto" ref={ref}>
+    <section style={{ background: 'white', padding: '96px 0' }}>
+      <div
+        ref={ref}
+        style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px' }}
+      >
         {/* Header */}
-        <div
-          className="text-center mb-16"
-          style={{
-            opacity: inView ? 1 : 0,
-            transform: inView ? 'translateY(0)' : 'translateY(24px)',
-            transition: 'opacity 0.6s ease, transform 0.6s ease',
-          }}
-        >
-          <span
-            className="inline-block px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-4"
-            style={{ background: 'rgba(226,255,103,0.2)', color: 'var(--navy)' }}
-          >
+        <div style={{
+          textAlign: 'center',
+          marginBottom: 64,
+          opacity: inView ? 1 : 0,
+          transform: inView ? 'translateY(0)' : 'translateY(24px)',
+          transition: 'opacity 0.6s ease, transform 0.6s ease',
+        }}>
+          <span style={{
+            display: 'inline-block',
+            padding: '4px 14px',
+            borderRadius: 999,
+            fontSize: 11,
+            fontWeight: 700,
+            letterSpacing: '0.1em',
+            textTransform: 'uppercase' as const,
+            background: 'rgba(226,255,103,0.2)',
+            color: 'var(--navy)',
+            marginBottom: 16,
+          }}>
             {isAr ? 'بالأرقام' : 'By the Numbers'}
           </span>
-          <h2
-            className="font-barlow-cond font-black"
-            style={{
-              fontSize: 'clamp(36px,5vw,60px)',
-              color: 'var(--navy)',
-              fontFamily: isAr ? 'Cairo, sans-serif' : 'Barlow Condensed, sans-serif',
-            }}
-          >
+          <h2 style={{
+            fontSize: 'clamp(32px, 4.5vw, 52px)',
+            fontFamily: isAr ? 'Cairo, sans-serif' : 'Barlow Condensed, sans-serif',
+            fontWeight: 900,
+            color: 'var(--navy)',
+            lineHeight: 1.05,
+          }}>
             {t('statsTitle')}
           </h2>
         </div>
 
-        {/* Stats grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-12 sm:gap-16">
+        {/* Stats */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+          gap: 16,
+        }}>
           {stats.map((s) => (
-            <StatItem
-              key={s.label}
-              value={s.value}
-              suffix={s.suffix}
-              label={s.label}
-              started={inView}
-              delay={s.delay}
-            />
+            <StatItem key={s.label} value={s.value} suffix={s.suffix} label={s.label} started={inView} delay={s.delay} />
           ))}
         </div>
 
-        {/* Divider with lime */}
-        <div className="mt-16 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(226,255,103,0.5) 50%, transparent)' }} />
+        <div style={{
+          marginTop: 64,
+          height: 1,
+          background: 'linear-gradient(90deg, transparent, rgba(226,255,103,0.5) 50%, transparent)',
+        }} />
       </div>
     </section>
   )

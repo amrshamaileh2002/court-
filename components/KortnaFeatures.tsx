@@ -4,32 +4,32 @@ import { useLang } from '@/context/LanguageContext'
 
 const ICONS = {
   instant: (
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
     </svg>
   ),
   find: (
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
     </svg>
   ),
   pay: (
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/>
     </svg>
   ),
   match: (
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
     </svg>
   ),
   track: (
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
     </svg>
   ),
   owner: (
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
     </svg>
   ),
@@ -43,7 +43,7 @@ export default function KortnaFeatures() {
   useEffect(() => {
     const el = ref.current
     if (!el) return
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setInView(true); obs.disconnect() } }, { threshold: 0.1 })
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setInView(true); obs.disconnect() } }, { threshold: 0.08 })
     obs.observe(el)
     return () => obs.disconnect()
   }, [])
@@ -60,40 +60,60 @@ export default function KortnaFeatures() {
   ]
 
   return (
-    <section className="py-24 px-5 sm:px-8" style={{ background: 'var(--off-white)' }}>
-      <div className="max-w-7xl mx-auto" ref={ref}>
+    <section style={{ background: 'var(--off-white)', padding: '96px 0' }}>
+      <div
+        ref={ref}
+        style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px' }}
+      >
         {/* Header */}
         <div
-          className="text-center mb-16"
+          className="text-center"
           style={{
+            marginBottom: 56,
             opacity: inView ? 1 : 0,
             transform: inView ? 'translateY(0)' : 'translateY(24px)',
             transition: 'opacity 0.6s ease, transform 0.6s ease',
           }}
         >
           <span
-            className="inline-block px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-4"
-            style={{ background: 'rgba(22,69,211,0.08)', color: 'var(--blue)' }}
+            style={{
+              display: 'inline-block',
+              padding: '4px 14px',
+              borderRadius: 999,
+              fontSize: 11,
+              fontWeight: 700,
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+              background: 'rgba(22,69,211,0.08)',
+              color: 'var(--blue)',
+              marginBottom: 16,
+            }}
           >
             {isAr ? 'المميزات' : 'Features'}
           </span>
           <h2
-            className="font-barlow-cond font-black mb-4"
             style={{
-              fontSize: 'clamp(36px,5vw,60px)',
-              color: 'var(--navy)',
+              fontSize: 'clamp(32px, 4.5vw, 52px)',
               fontFamily: isAr ? 'Cairo, sans-serif' : 'Barlow Condensed, sans-serif',
+              fontWeight: 900,
+              color: 'var(--navy)',
+              lineHeight: 1.05,
+              marginBottom: 12,
             }}
           >
             {t('featuresTitle')}
           </h2>
-          <p className="text-base max-w-xl mx-auto" style={{ color: 'var(--text3)', fontFamily: isAr ? 'Cairo, sans-serif' : undefined }}>
+          <p style={{ color: 'var(--text3)', fontSize: 15, maxWidth: 480, margin: '0 auto', fontFamily: isAr ? 'Cairo, sans-serif' : undefined }}>
             {t('featuresSubtitle')}
           </p>
         </div>
 
         {/* Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+          gap: 20,
+        }}>
           {features.map((f, i) => (
             <div
               key={f.key}
@@ -101,23 +121,35 @@ export default function KortnaFeatures() {
               style={{
                 opacity: inView ? 1 : 0,
                 transform: inView ? 'translateY(0)' : 'translateY(32px)',
-                transition: `opacity 0.6s ease ${i * 0.08}s, transform 0.6s ease ${i * 0.08}s`,
+                transition: `opacity 0.55s ease ${i * 0.07}s, transform 0.55s ease ${i * 0.07}s`,
               }}
             >
-              {/* Icon */}
-              <div
-                className="w-14 h-14 rounded-2xl flex items-center justify-center mb-5"
-                style={{ background: 'rgba(226,255,103,0.15)', color: 'var(--navy)' }}
-              >
+              <div style={{
+                width: 48, height: 48,
+                borderRadius: 14,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                background: 'rgba(226,255,103,0.18)',
+                color: 'var(--navy)',
+                marginBottom: 18,
+                flexShrink: 0,
+              }}>
                 {f.icon}
               </div>
-              <h3
-                className="font-bold text-lg mb-2"
-                style={{ color: 'var(--navy)', fontFamily: isAr ? 'Cairo, sans-serif' : undefined }}
-              >
+              <h3 style={{
+                fontWeight: 700,
+                fontSize: 16,
+                color: 'var(--navy)',
+                marginBottom: 8,
+                fontFamily: isAr ? 'Cairo, sans-serif' : undefined,
+              }}>
                 {f.title}
               </h3>
-              <p className="text-sm leading-relaxed" style={{ color: 'var(--text3)', fontFamily: isAr ? 'Cairo, sans-serif' : undefined }}>
+              <p style={{
+                fontSize: 14,
+                lineHeight: 1.6,
+                color: 'var(--text3)',
+                fontFamily: isAr ? 'Cairo, sans-serif' : undefined,
+              }}>
                 {f.desc}
               </p>
             </div>

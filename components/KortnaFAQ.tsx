@@ -11,7 +11,7 @@ export default function KortnaFAQ() {
   useEffect(() => {
     const el = ref.current
     if (!el) return
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setInView(true); obs.disconnect() } }, { threshold: 0.1 })
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setInView(true); obs.disconnect() } }, { threshold: 0.08 })
     obs.observe(el)
     return () => obs.disconnect()
   }, [])
@@ -28,75 +28,107 @@ export default function KortnaFAQ() {
   ]
 
   return (
-    <section className="py-24 px-5 sm:px-8" style={{ background: 'white' }}>
-      <div className="max-w-3xl mx-auto" ref={ref}>
+    <section style={{ background: 'white', padding: '96px 0' }}>
+      <div
+        ref={ref}
+        style={{ maxWidth: 760, margin: '0 auto', padding: '0 24px' }}
+      >
         {/* Header */}
-        <div
-          className="text-center mb-14"
-          style={{
-            opacity: inView ? 1 : 0,
-            transform: inView ? 'translateY(0)' : 'translateY(24px)',
-            transition: 'opacity 0.6s ease, transform 0.6s ease',
-          }}
-        >
-          <span
-            className="inline-block px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-4"
-            style={{ background: 'rgba(226,255,103,0.2)', color: 'var(--navy)' }}
-          >
+        <div style={{
+          textAlign: 'center',
+          marginBottom: 56,
+          opacity: inView ? 1 : 0,
+          transform: inView ? 'translateY(0)' : 'translateY(24px)',
+          transition: 'opacity 0.6s ease, transform 0.6s ease',
+        }}>
+          <span style={{
+            display: 'inline-block',
+            padding: '4px 14px',
+            borderRadius: 999,
+            fontSize: 11,
+            fontWeight: 700,
+            letterSpacing: '0.1em',
+            textTransform: 'uppercase' as const,
+            background: 'rgba(226,255,103,0.2)',
+            color: 'var(--navy)',
+            marginBottom: 16,
+          }}>
             FAQ
           </span>
-          <h2
-            className="font-barlow-cond font-black"
-            style={{
-              fontSize: 'clamp(36px,5vw,60px)',
-              color: 'var(--navy)',
-              fontFamily: isAr ? 'Cairo, sans-serif' : 'Barlow Condensed, sans-serif',
-            }}
-          >
+          <h2 style={{
+            fontSize: 'clamp(32px, 4.5vw, 52px)',
+            fontFamily: isAr ? 'Cairo, sans-serif' : 'Barlow Condensed, sans-serif',
+            fontWeight: 900,
+            color: 'var(--navy)',
+            lineHeight: 1.05,
+          }}>
             {t('faqTitle')}
           </h2>
         </div>
 
         {/* Accordion */}
-        <div className="space-y-0">
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
           {faqs.map((faq, i) => (
             <div
               key={i}
-              className={`faq-item ${open === i ? 'open' : ''}`}
               style={{
+                borderBottom: `1px solid ${open === i ? 'rgba(226,255,103,0.4)' : 'rgba(18,39,68,0.08)'}`,
+                transition: 'border-color 0.2s',
                 opacity: inView ? 1 : 0,
-                transition: `opacity 0.5s ease ${i * 0.07}s, border-color 0.2s`,
+                transitionDelay: `${i * 0.06}s`,
               }}
             >
               <button
-                className="w-full flex items-center justify-between py-5 text-left gap-4"
+                style={{
+                  width: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  padding: '20px 0',
+                  gap: 16,
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  textAlign: isAr ? 'right' : 'left',
+                  fontFamily: isAr ? 'Cairo, sans-serif' : undefined,
+                }}
                 onClick={() => setOpen(open === i ? null : i)}
-                style={{ fontFamily: isAr ? 'Cairo, sans-serif' : undefined }}
               >
-                <span
-                  className="font-semibold text-base"
-                  style={{ color: 'var(--navy)', textAlign: isAr ? 'right' : 'left' }}
-                >
+                <span style={{ fontWeight: 600, fontSize: 15, color: 'var(--navy)', flex: 1 }}>
                   {faq.q}
                 </span>
-                <span
-                  className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center transition-all"
-                  style={{
-                    background: open === i ? '#E2FF67' : 'rgba(18,39,68,0.06)',
-                    transform: open === i ? 'rotate(45deg)' : 'rotate(0)',
-                    transition: 'background 0.2s, transform 0.3s ease',
-                  }}
-                >
+                <span style={{
+                  flexShrink: 0,
+                  width: 28,
+                  height: 28,
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  background: open === i ? '#E2FF67' : 'rgba(18,39,68,0.06)',
+                  transition: 'background 0.2s, transform 0.3s ease',
+                  transform: open === i ? 'rotate(45deg)' : 'rotate(0)',
+                  color: 'var(--navy)',
+                }}>
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round">
                     <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
                   </svg>
                 </span>
               </button>
-              <div
-                className="faq-answer pb-5 pr-10"
-                style={{ fontFamily: isAr ? 'Cairo, sans-serif' : undefined }}
-              >
-                <p className="text-sm leading-relaxed" style={{ color: 'var(--text3)' }}>
+
+              <div style={{
+                maxHeight: open === i ? 240 : 0,
+                overflow: 'hidden',
+                transition: 'max-height 0.35s cubic-bezier(0.4,0,0.2,1)',
+              }}>
+                <p style={{
+                  fontSize: 14,
+                  lineHeight: 1.7,
+                  color: 'var(--text3)',
+                  paddingBottom: 20,
+                  paddingRight: 44,
+                  fontFamily: isAr ? 'Cairo, sans-serif' : undefined,
+                }}>
                   {faq.a}
                 </p>
               </div>
