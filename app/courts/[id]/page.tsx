@@ -156,7 +156,7 @@ export default function CourtDetailPage({ params }: { params: Promise<{ id: stri
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+      <div style={{ maxWidth: 900, margin: '0 auto', padding: '32px 24px', width: '100%', boxSizing: 'border-box' }}>
         {/* Court Info */}
         <div className="bg-white rounded-2xl p-6 mb-6 shadow-sm border border-gray-100">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
