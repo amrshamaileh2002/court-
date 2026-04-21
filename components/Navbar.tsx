@@ -2,13 +2,13 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useLang } from '@/context/LanguageContext'
-import MagneticButton from './MagneticButton'
+import { KortnaLogoMark } from './KortnaLogo'
 
 const NAV_LINKS = [
-  { href: '/',             labelKey: 'home' as const },
-  { href: '/courts',       labelKey: 'courts' as const },
+  { href: '/',             labelKey: 'home'       as const },
+  { href: '/courts',       labelKey: 'courts'     as const },
   { href: '/how-it-works', labelKey: 'howItWorks' as const },
-  { href: '/for-courts',   labelKey: 'forCourts' as const },
+  { href: '/for-courts',   labelKey: 'forCourts'  as const },
 ]
 
 export default function Navbar() {
@@ -27,125 +27,165 @@ export default function Navbar() {
   return (
     <>
       <nav
-        className={`nav-root w-full ${scrolled ? 'scrolled' : ''}`}
-        style={{
-          background: scrolled ? undefined : 'transparent',
-          position: 'fixed',
-          top: 0,
-          zIndex: 1000,
-        }}
+        className={`nav-root${scrolled ? ' scrolled' : ''}`}
+        style={{ position: 'fixed', top: 0, width: '100%', zIndex: 1000 }}
       >
-        <div className="max-w-7xl mx-auto px-5 sm:px-8">
-          <div className="flex items-center justify-between h-[72px]">
+        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 72 }}>
 
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2.5 flex-shrink-0 group">
-              <div
-                className="w-8 h-8 rounded-xl flex items-center justify-center font-black text-sm transition-all group-hover:scale-110"
-                style={{
-                  background: '#E2FF67',
-                  color: '#122744',
-                  fontFamily: 'Barlow Condensed, sans-serif',
-                  letterSpacing: '-0.02em',
-                }}
-              >
-                K
-              </div>
-              <span
-                className="font-barlow-cond font-black text-2xl tracking-tight text-white"
-                style={{ fontFamily: 'Barlow Condensed, sans-serif' }}
-              >
+            <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0, textDecoration: 'none' }}>
+              <KortnaLogoMark size={32} />
+              <span style={{
+                fontFamily: 'Barlow Condensed, sans-serif',
+                fontWeight: 900,
+                fontSize: 24,
+                color: 'white',
+                letterSpacing: '0.04em',
+                lineHeight: 1,
+              }}>
                 KORTNA
               </span>
             </Link>
 
             {/* Desktop links */}
-            <div className="hidden md:flex items-center gap-8">
+            <div className="hidden md:flex" style={{ alignItems: 'center', gap: 32 }}>
               {NAV_LINKS.map(({ href, labelKey }) => (
                 <Link
                   key={href}
                   href={href}
-                  className="relative text-sm font-medium text-white/70 hover:text-white transition-colors group"
-                  style={{ fontFamily: isAr ? 'Cairo, sans-serif' : undefined }}
+                  style={{
+                    position: 'relative',
+                    fontSize: 14,
+                    fontWeight: 500,
+                    color: 'rgba(255,255,255,0.7)',
+                    textDecoration: 'none',
+                    fontFamily: isAr ? 'Cairo, sans-serif' : undefined,
+                    transition: 'color 0.2s',
+                  }}
+                  onMouseEnter={e => (e.currentTarget.style.color = 'white')}
+                  onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.7)')}
                 >
                   {t(labelKey)}
-                  <span className="absolute -bottom-0.5 left-0 w-0 h-px transition-all duration-300 group-hover:w-full"
-                    style={{ background: '#E2FF67' }} />
                 </Link>
               ))}
             </div>
 
             {/* Right side */}
-            <div className="flex items-center gap-3">
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
               <button
                 onClick={toggleLang}
-                className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all hover:scale-105"
+                className="hidden md:flex"
                 style={{
-                  borderColor: 'rgba(255,255,255,0.15)',
+                  alignItems: 'center',
+                  gap: 6,
+                  padding: '7px 12px',
+                  borderRadius: 999,
+                  fontSize: 12,
+                  fontWeight: 600,
+                  cursor: 'pointer',
                   border: '1px solid rgba(255,255,255,0.15)',
                   color: 'rgba(255,255,255,0.8)',
                   background: 'rgba(255,255,255,0.05)',
                   backdropFilter: 'blur(8px)',
+                  transition: 'all 0.2s',
                 }}
               >
                 {lang === 'en' ? '🇯🇴 AR' : '🇬🇧 EN'}
               </button>
 
-              <MagneticButton
+              <button
                 onClick={() => window.location.href = '/courts'}
-                className="hidden md:inline-flex items-center px-5 py-2.5 rounded-2xl text-sm font-bold"
-                style={{ background: '#E2FF67', color: '#122744' } as React.CSSProperties}
+                className="hidden md:inline-flex"
+                style={{
+                  alignItems: 'center',
+                  padding: '10px 22px',
+                  borderRadius: 14,
+                  fontSize: 14,
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  border: 'none',
+                  background: '#E85A1E',
+                  color: 'white',
+                  letterSpacing: '0.02em',
+                  boxShadow: '0 4px 16px rgba(232,90,30,0.4)',
+                  transition: 'transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s ease, background 0.2s ease',
+                  fontFamily: isAr ? 'Cairo, sans-serif' : 'Barlow, sans-serif',
+                }}
+                onMouseEnter={e => {
+                  const b = e.currentTarget as HTMLButtonElement
+                  b.style.transform = 'translateY(-2px) scale(1.03)'
+                  b.style.boxShadow = '0 8px 28px rgba(232,90,30,0.55)'
+                  b.style.background = '#F06C30'
+                }}
+                onMouseLeave={e => {
+                  const b = e.currentTarget as HTMLButtonElement
+                  b.style.transform = ''
+                  b.style.boxShadow = '0 4px 16px rgba(232,90,30,0.4)'
+                  b.style.background = '#E85A1E'
+                }}
               >
                 {t('bookNow')}
-              </MagneticButton>
+              </button>
 
               {/* Mobile hamburger */}
               <button
-                className="flex md:hidden flex-col gap-1.5 p-2"
+                className="flex md:hidden"
+                style={{ flexDirection: 'column', gap: 5, padding: 8, background: 'none', border: 'none', cursor: 'pointer' }}
                 onClick={() => setOpen(true)}
                 aria-label="Open menu"
               >
-                <span className="w-6 h-0.5 rounded" style={{ background: 'white' }} />
-                <span className="w-4 h-0.5 rounded" style={{ background: 'rgba(255,255,255,0.6)' }} />
-                <span className="w-6 h-0.5 rounded" style={{ background: 'white' }} />
+                <span style={{ width: 24, height: 2, background: 'white', borderRadius: 2, display: 'block' }} />
+                <span style={{ width: 16, height: 2, background: 'rgba(255,255,255,0.6)', borderRadius: 2, display: 'block' }} />
+                <span style={{ width: 24, height: 2, background: 'white', borderRadius: 2, display: 'block' }} />
               </button>
             </div>
           </div>
         </div>
       </nav>
 
-      {/* Spacer for fixed nav */}
-      <div className="h-[72px]" />
+      {/* Spacer */}
+      <div style={{ height: 72 }} />
 
       {/* Mobile overlay */}
       {open && (
         <div
-          className="fixed inset-0 z-[2000] flex flex-col items-center justify-center"
-          style={{ background: 'rgba(18,39,68,0.97)', backdropFilter: 'blur(20px)' }}
+          style={{
+            position: 'fixed', inset: 0, zIndex: 2000,
+            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+            background: 'rgba(18,39,68,0.97)', backdropFilter: 'blur(20px)',
+          }}
         >
           <button
-            className="absolute top-6 right-6 text-white text-3xl"
+            style={{ position: 'absolute', top: 24, right: 24, fontSize: 28, color: 'white', background: 'none', border: 'none', cursor: 'pointer' }}
             onClick={() => setOpen(false)}
           >
             ✕
           </button>
-          <div className="flex flex-col items-center gap-8">
-            {/* Logo */}
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center font-black text-base" style={{ background: '#E2FF67', color: '#122744', fontFamily: 'Barlow Condensed, sans-serif' }}>K</div>
-              <span className="font-barlow-cond font-black text-3xl text-white" style={{ fontFamily: 'Barlow Condensed, sans-serif' }}>KORTNA</span>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 32 }}>
+            {/* Mobile logo */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+              <KortnaLogoMark size={44} />
+              <span style={{ fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 900, fontSize: 32, color: 'white', letterSpacing: '0.04em' }}>
+                KORTNA
+              </span>
             </div>
 
             {NAV_LINKS.map(({ href, labelKey }, i) => (
               <Link
                 key={href}
                 href={href}
-                className="font-barlow-cond font-black text-4xl tracking-wide transition-colors hover:text-[#E2FF67]"
                 style={{
+                  fontSize: 36,
+                  fontWeight: 900,
                   color: 'white',
-                  animationDelay: `${i * 60}ms`,
+                  textDecoration: 'none',
                   fontFamily: isAr ? 'Cairo, sans-serif' : 'Barlow Condensed, sans-serif',
+                  letterSpacing: '0.02em',
+                  transition: 'color 0.2s',
                 }}
+                onMouseEnter={e => (e.currentTarget.style.color = '#E85A1E')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'white')}
                 onClick={() => setOpen(false)}
               >
                 {t(labelKey)}
@@ -154,19 +194,28 @@ export default function Navbar() {
 
             <button
               onClick={() => { toggleLang(); setOpen(false) }}
-              className="mt-4 px-6 py-2 rounded-full text-sm font-semibold"
-              style={{ border: '1px solid rgba(226,255,103,0.4)', color: '#E2FF67' }}
+              style={{
+                marginTop: 8, padding: '8px 20px', borderRadius: 999,
+                fontSize: 13, fontWeight: 600, cursor: 'pointer',
+                border: '1px solid rgba(232,90,30,0.4)', color: '#E85A1E',
+                background: 'none', fontFamily: isAr ? 'Cairo, sans-serif' : undefined,
+              }}
             >
               {lang === 'en' ? '🇯🇴 Switch to Arabic' : '🇬🇧 Switch to English'}
             </button>
 
-            <MagneticButton
+            <button
               onClick={() => { window.location.href = '/courts'; setOpen(false) }}
-              className="px-8 py-3 rounded-2xl text-sm font-bold"
-              style={{ background: '#E2FF67', color: '#122744' } as React.CSSProperties}
+              style={{
+                padding: '14px 36px', borderRadius: 16,
+                fontSize: 16, fontWeight: 800, cursor: 'pointer', border: 'none',
+                background: '#E85A1E', color: 'white',
+                boxShadow: '0 6px 24px rgba(232,90,30,0.45)',
+                fontFamily: isAr ? 'Cairo, sans-serif' : 'Barlow, sans-serif',
+              }}
             >
               {t('bookNow')}
-            </MagneticButton>
+            </button>
           </div>
         </div>
       )}

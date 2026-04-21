@@ -1,6 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { useLang } from '@/context/LanguageContext'
+import { KortnaLogoMark } from './KortnaLogo'
 
 const LINKS = {
   product: [
@@ -25,38 +26,80 @@ export default function Footer() {
   const { lang } = useLang()
   const isAr = lang === 'ar'
 
+  const colHeadStyle: React.CSSProperties = {
+    fontSize: 11,
+    fontWeight: 800,
+    textTransform: 'uppercase',
+    letterSpacing: '0.1em',
+    color: 'white',
+    marginBottom: 18,
+    fontFamily: isAr ? 'Cairo, sans-serif' : 'Barlow Condensed, sans-serif',
+  }
+
+  const linkStyle: React.CSSProperties = {
+    fontSize: 14,
+    color: 'rgba(255,255,255,0.45)',
+    textDecoration: 'none',
+    display: 'block',
+    marginBottom: 12,
+    transition: 'color 0.2s',
+    fontFamily: isAr ? 'Cairo, sans-serif' : undefined,
+  }
+
   return (
     <footer style={{ background: '#07111e', color: 'rgba(255,255,255,0.45)' }}>
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 py-16">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-14">
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '64px 24px 32px' }}>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+          gap: 40,
+          marginBottom: 56,
+        }}>
 
           {/* Brand */}
-          <div className="col-span-2 md:col-span-1">
-            <Link href="/" className="inline-flex items-center gap-2 mb-5 group">
-              <div
-                className="w-9 h-9 rounded-xl flex items-center justify-center font-black text-sm transition-all group-hover:scale-110"
-                style={{ background: '#E2FF67', color: '#122744', fontFamily: 'Barlow Condensed, sans-serif' }}
-              >
-                K
+          <div style={{ gridColumn: 'span 1' }}>
+            <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', marginBottom: 8 }}>
+              <KortnaLogoMark size={42} />
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span style={{
+                  fontFamily: 'Barlow Condensed, sans-serif',
+                  fontWeight: 900,
+                  fontSize: 26,
+                  color: 'white',
+                  letterSpacing: '0.04em',
+                  lineHeight: 1,
+                }}>
+                  KORTNA
+                </span>
+                <span style={{
+                  fontFamily: 'Barlow Condensed, sans-serif',
+                  fontWeight: 600,
+                  fontSize: 9,
+                  color: 'rgba(255,255,255,0.35)',
+                  letterSpacing: '0.16em',
+                  textTransform: 'uppercase',
+                  marginTop: 3,
+                }}>
+                  YOUR GAME OUR COURT
+                </span>
               </div>
-              <span
-                className="font-barlow-cond font-black text-2xl text-white tracking-tight"
-                style={{ fontFamily: 'Barlow Condensed, sans-serif' }}
-              >
-                KORTNA
-              </span>
             </Link>
-            <p
-              className="text-sm leading-relaxed mb-5"
-              style={{ maxWidth: 200, fontFamily: isAr ? 'Cairo, sans-serif' : undefined }}
-            >
+            <p style={{
+              fontSize: 13,
+              lineHeight: 1.65,
+              color: 'rgba(255,255,255,0.4)',
+              maxWidth: 200,
+              marginTop: 16,
+              marginBottom: 20,
+              fontFamily: isAr ? 'Cairo, sans-serif' : undefined,
+            }}>
               {isAr
                 ? 'أول منصة ذكية لحجز الملاعب الرياضية في الأردن.'
                 : "Jordan's first smart sports court booking platform."}
             </p>
 
-            {/* Social links */}
-            <div className="flex gap-2.5">
+            {/* Social icons */}
+            <div style={{ display: 'flex', gap: 10 }}>
               {[
                 { label: '𝕏', href: '#' },
                 { label: 'in', href: '#' },
@@ -65,8 +108,27 @@ export default function Footer() {
                 <a
                   key={s.label}
                   href={s.href}
-                  className="w-8 h-8 rounded-lg flex items-center justify-center text-xs transition-all hover:text-white hover:scale-110"
-                  style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.09)' }}
+                  style={{
+                    width: 34, height: 34, borderRadius: 10,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: 12, color: 'rgba(255,255,255,0.5)',
+                    background: 'rgba(255,255,255,0.06)',
+                    border: '1px solid rgba(255,255,255,0.09)',
+                    textDecoration: 'none',
+                    transition: 'all 0.2s',
+                  }}
+                  onMouseEnter={e => {
+                    const a = e.currentTarget as HTMLAnchorElement
+                    a.style.color = 'white'
+                    a.style.borderColor = 'rgba(232,90,30,0.4)'
+                    a.style.background = 'rgba(232,90,30,0.12)'
+                  }}
+                  onMouseLeave={e => {
+                    const a = e.currentTarget as HTMLAnchorElement
+                    a.style.color = 'rgba(255,255,255,0.5)'
+                    a.style.borderColor = 'rgba(255,255,255,0.09)'
+                    a.style.background = 'rgba(255,255,255,0.06)'
+                  }}
                 >
                   {s.label}
                 </a>
@@ -76,48 +138,43 @@ export default function Footer() {
 
           {/* Link columns */}
           {[
-            { title: isAr ? 'المنتج' : 'Product',           items: LINKS.product },
-            { title: isAr ? 'لأصحاب الملاعب' : 'For Venues', items: LINKS.venues },
-            { title: isAr ? 'الشركة' : 'Company',           items: LINKS.company },
+            { title: isAr ? 'المنتج'           : 'Product',    items: LINKS.product  },
+            { title: isAr ? 'لأصحاب الملاعب'  : 'For Venues', items: LINKS.venues   },
+            { title: isAr ? 'الشركة'           : 'Company',    items: LINKS.company  },
           ].map(col => (
             <div key={col.title}>
-              <div
-                className="text-xs font-bold uppercase tracking-widest text-white mb-4"
-                style={{ fontFamily: isAr ? 'Cairo, sans-serif' : undefined }}
-              >
-                {col.title}
-              </div>
-              <ul className="space-y-3">
-                {col.items.map(link => (
-                  <li key={link.en}>
-                    <Link
-                      href={link.href}
-                      className="text-sm transition-colors hover:text-white"
-                      style={{ fontFamily: isAr ? 'Cairo, sans-serif' : undefined }}
-                    >
-                      {isAr ? link.ar : link.en}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
+              <div style={colHeadStyle}>{col.title}</div>
+              {col.items.map(link => (
+                <Link
+                  key={link.en}
+                  href={link.href}
+                  style={linkStyle}
+                  onMouseEnter={e => (e.currentTarget.style.color = 'white')}
+                  onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.45)')}
+                >
+                  {isAr ? link.ar : link.en}
+                </Link>
+              ))}
             </div>
           ))}
         </div>
 
         {/* Bottom bar */}
-        <div
-          className="border-t pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs"
-          style={{ borderColor: 'rgba(255,255,255,0.06)' }}
-        >
-          <span style={{ fontFamily: isAr ? 'Cairo, sans-serif' : undefined }}>
+        <div style={{
+          borderTop: '1px solid rgba(255,255,255,0.06)',
+          paddingTop: 24,
+          display: 'flex',
+          flexWrap: 'wrap',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: 12,
+        }}>
+          <span style={{ fontSize: 12, fontFamily: isAr ? 'Cairo, sans-serif' : undefined }}>
             {isAr ? '© 2026 كورتنا. جميع الحقوق محفوظة.' : '© 2026 Kortna · كورتنا. All rights reserved.'}
           </span>
-          <div className="flex items-center gap-2">
-            <span
-              className="w-1.5 h-1.5 rounded-full animate-pulse"
-              style={{ background: '#E2FF67' }}
-            />
-            <span style={{ color: '#E2FF67' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#E85A1E', display: 'inline-block', animation: 'pulse 2s infinite' }} />
+            <span style={{ fontSize: 12, color: '#E85A1E', fontWeight: 600 }}>
               {isAr ? 'عمّان، الأردن — إطلاق 2026' : 'Amman, Jordan — Launching 2026'}
             </span>
           </div>

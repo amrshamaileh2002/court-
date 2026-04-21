@@ -1,5 +1,5 @@
 'use client'
-import { useRef, ReactNode, MouseEvent, CSSProperties, forwardRef } from 'react'
+import { useRef, ReactNode, MouseEvent, CSSProperties } from 'react'
 
 interface Props {
   children: ReactNode
@@ -13,7 +13,7 @@ interface Props {
   fullWidth?: boolean
 }
 
-const BASE = 'relative inline-flex items-center justify-center gap-2 font-bold select-none outline-none border-0 cursor-pointer overflow-hidden'
+const BASE = 'relative inline-flex items-center justify-center gap-2 select-none outline-none border-0 cursor-pointer overflow-hidden'
 
 const VARIANTS: Record<string, string> = {
   primary:   'kortna-btn-primary',
@@ -21,10 +21,10 @@ const VARIANTS: Record<string, string> = {
   ghost:     'kortna-btn-ghost',
 }
 
-const SIZES: Record<string, string> = {
-  sm: 'px-5 py-2.5 text-sm rounded-xl',
-  md: 'px-7 py-3.5 text-sm rounded-2xl',
-  lg: 'px-9 py-4 text-base rounded-2xl',
+const SIZE_STYLES: Record<string, React.CSSProperties> = {
+  sm: { padding: '9px 18px',  fontSize: 13, fontWeight: 700, borderRadius: 12 },
+  md: { padding: '12px 24px', fontSize: 14, fontWeight: 800, borderRadius: 14 },
+  lg: { padding: '15px 32px', fontSize: 15, fontWeight: 800, borderRadius: 16 },
 }
 
 export default function KortnaButton({
@@ -63,9 +63,9 @@ export default function KortnaButton({
     <button
       ref={ref}
       type={type}
-      style={style}
       disabled={disabled}
-      className={`${BASE} ${VARIANTS[variant]} ${SIZES[size]} ${fullWidth ? 'w-full' : ''} ${className}`}
+      style={{ ...SIZE_STYLES[size], width: fullWidth ? '100%' : undefined, ...style }}
+      className={`${BASE} ${VARIANTS[variant]} ${className}`}
       onMouseMove={onMove}
       onMouseLeave={onLeave}
       onClick={onClick}
