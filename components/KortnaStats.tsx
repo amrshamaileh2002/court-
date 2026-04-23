@@ -36,7 +36,10 @@ function StatItem({ value, suffix, label, started, delay }: { value: number; suf
         fontFamily: 'Barlow Condensed, sans-serif',
         fontWeight: 900,
         fontSize: 'clamp(44px, 5.5vw, 72px)',
-        color: 'var(--navy)',
+        background: 'linear-gradient(135deg, #E85A1E, #F87C3F)',
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        backgroundClip: 'text',
         lineHeight: 1,
         marginBottom: 8,
       }}>
@@ -72,7 +75,7 @@ export default function KortnaStats() {
   ]
 
   return (
-    <section style={{ background: 'white', padding: '96px 0' }}>
+    <section style={{ background: 'linear-gradient(180deg, white 0%, #f8f9fb 100%)', padding: '96px 0' }}>
       <div
         ref={ref}
         style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px' }}

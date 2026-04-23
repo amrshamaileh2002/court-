@@ -259,31 +259,6 @@ body:has(a:hover, button:hover) #cursor-ring {
 }
 
 /* ── KORTNA FEATURE CARD ─────────────────────── */
-.kortna-card {
-  background: white;
-  border: 1px solid rgba(18,39,68,0.08);
-  border-radius: 24px;
-  padding: 28px;
-  transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
-  position: relative;
-  overflow: hidden;
-}
-.kortna-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--lime), var(--blue));
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.4s ease;
-}
-.kortna-card:hover::before { transform: scaleX(1); }
-.kortna-card:hover {
-  box-shadow: 0 16px 48px rgba(18,39,68,0.1);
-  transform: translateY(-4px);
-  border-color: rgba(226,255,103,0.4);
-}
 
 /* ── SECTION TRANSITIONS ─────────────────────── */
 @keyframes section-iris {
@@ -494,7 +469,7 @@ body:has(a:hover, button:hover) #cursor-ring {
   transition: border-color 0.2s;
 }
 .venue-form-input::placeholder { color: rgba(255,255,255,0.4); }
-.venue-form-input:focus { border-color: var(--lime); }
+.venue-form-input:focus { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(232,90,30,0.15); }
 
 /* ── PLAN CARD EXPAND ────────────────────────── */
 .plan-extra {
@@ -517,44 +492,47 @@ body:has(a:hover, button:hover) #cursor-ring {
    KORTNA BUTTON SYSTEM
    ═══════════════════════════════════════════════ */
 
-/* ── PRIMARY (Orange) ────────────────────────── */
+/* ── PRIMARY (Orange gradient) ───────────────── */
 .kortna-btn-primary {
-  background: #E85A1E;
+  background: linear-gradient(135deg, #E85A1E 0%, #F87C3F 100%);
   color: #ffffff;
   font-weight: 800;
-  letter-spacing: 0.02em;
-  box-shadow: 0 2px 14px rgba(232,90,30,0.35);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  box-shadow: 0 4px 20px rgba(232,90,30,0.4), inset 0 1px 0 rgba(255,255,255,0.18);
   transition:
-    transform  0.25s cubic-bezier(0.34,1.56,0.64,1),
-    box-shadow 0.25s ease,
-    background 0.2s ease,
+    transform  0.3s cubic-bezier(0.34,1.56,0.64,1),
+    box-shadow 0.3s ease,
+    filter     0.2s ease,
     opacity    0.2s ease;
 }
 .kortna-btn-primary::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 60%);
+  background: linear-gradient(135deg, rgba(255,255,255,0.25) 0%, transparent 55%);
   opacity: 0;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.25s ease;
   border-radius: inherit;
 }
 .kortna-btn-primary:hover {
-  transform: translateY(-2px) scale(1.03);
-  box-shadow: 0 10px 32px rgba(232,90,30,0.55), 0 2px 8px rgba(232,90,30,0.3);
-  background: #F06C30;
+  transform: translateY(-3px) scale(1.04);
+  box-shadow: 0 14px 40px rgba(232,90,30,0.6), 0 2px 8px rgba(232,90,30,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+  filter: brightness(1.08);
 }
 .kortna-btn-primary:hover::before { opacity: 1; }
 .kortna-btn-primary:active {
   transform: translateY(0) scale(0.97);
   box-shadow: 0 2px 10px rgba(232,90,30,0.3);
   transition-duration: 0.1s;
+  filter: brightness(0.96);
 }
 .kortna-btn-primary:disabled {
   opacity: 0.5;
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
+  filter: none;
 }
 
 /* ── SECONDARY (Glass) ───────────────────────── */
@@ -622,35 +600,41 @@ body:has(a:hover, button:hover) #cursor-ring {
    CARD SYSTEM
    ═══════════════════════════════════════════════ */
 
+/* ── KORTNA CARD ─────────────────────────────── */
 .kortna-card {
-  background: white;
-  border: 1px solid rgba(18,39,68,0.08);
-  border-radius: 20px;
-  padding: 28px;
+  background: linear-gradient(160deg, #ffffff 0%, #f9fafb 100%);
+  border-radius: 24px;
+  padding: 32px;
+  border: 1px solid rgba(18,39,68,0.07);
+  box-shadow: 0 2px 16px rgba(18,39,68,0.06), 0 0 0 1px rgba(18,39,68,0.03);
   position: relative;
   overflow: hidden;
-  transition:
-    transform    0.3s cubic-bezier(0.34,1.2,0.64,1),
-    box-shadow   0.3s ease,
-    border-color 0.3s ease;
+  transition: transform 0.4s cubic-bezier(0.34,1.2,0.64,1), box-shadow 0.35s ease, border-color 0.3s ease;
+}
+.kortna-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, #E85A1E, #F87C3F, #E85A1E);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.45s cubic-bezier(0.4,0,0.2,1);
 }
 .kortna-card::after {
   content: '';
   position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, #E2FF67, #1645D3);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
-  border-radius: 20px 20px 0 0;
+  bottom: 0; left: 0; right: 0; height: 80px;
+  background: linear-gradient(to top, rgba(232,90,30,0.03), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 .kortna-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 20px 48px rgba(18,39,68,0.1), 0 4px 12px rgba(18,39,68,0.06);
-  border-color: rgba(226,255,103,0.35);
+  transform: translateY(-10px);
+  box-shadow: 0 28px 72px rgba(18,39,68,0.14), 0 4px 16px rgba(18,39,68,0.08);
+  border-color: rgba(232,90,30,0.12);
 }
-.kortna-card:hover::after { transform: scaleX(1); }
+.kortna-card:hover::before { transform: scaleX(1); }
+.kortna-card:hover::after { opacity: 1; }
 
 /* ── REDUCED MOTION ──────────────────────────── */
 @media (prefers-reduced-motion: reduce) {

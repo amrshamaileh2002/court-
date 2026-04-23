@@ -7,7 +7,7 @@ import KortnaButton from './KortnaButton'
 const HeroScene = dynamic(() => import('@/components/3d/HeroScene'), {
   ssr: false,
   loading: () => (
-    <div className="hero-canvas" style={{ background: 'linear-gradient(135deg, #122744 0%, #080f20 100%)' }} />
+    <div className="hero-canvas" style={{ background: 'linear-gradient(135deg, #0A1628 0%, #06101f 100%)' }} />
   ),
 })
 
@@ -27,175 +27,186 @@ export default function KortnaHero() {
 
   return (
     <section
-      className="relative w-full overflow-hidden flex flex-col"
       style={{
         minHeight: '100vh',
-        background: 'linear-gradient(135deg, #122744 0%, #0a1a35 55%, #07101e 100%)',
+        position: 'relative',
+        overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
+        background: 'linear-gradient(160deg, #0A1628 0%, #0d1f3e 40%, #080f1e 100%)',
       }}
     >
       {/* 3D canvas */}
-      <div className="absolute inset-0" style={{ opacity: 0.55 }}>
+      <div style={{ position: 'absolute', inset: 0, opacity: 0.45 }}>
         <HeroScene />
       </div>
 
-      {/* Gradient vignettes */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute inset-x-0 bottom-0 h-56"
-          style={{ background: 'linear-gradient(to top, #122744, transparent)' }} />
-        <div className="absolute inset-x-0 top-0 h-24"
-          style={{ background: 'linear-gradient(to bottom, rgba(18,39,68,0.7), transparent)' }} />
-        <div className="absolute inset-y-0 left-0 w-32"
-          style={{ background: 'linear-gradient(to right, rgba(18,39,68,0.4), transparent)' }} />
-        <div className="absolute inset-y-0 right-0 w-32"
-          style={{ background: 'linear-gradient(to left, rgba(18,39,68,0.4), transparent)' }} />
+      {/* Orange radial spotlight */}
+      <div style={{
+        position: 'absolute',
+        top: '15%', left: '50%',
+        transform: 'translateX(-50%)',
+        width: 800, height: 500,
+        background: 'radial-gradient(ellipse, rgba(232,90,30,0.12) 0%, transparent 70%)',
+        pointerEvents: 'none',
+      }} />
+
+      {/* Gradient overlays */}
+      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 240, background: 'linear-gradient(to top, #0A1628, transparent)' }} />
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 120, background: 'linear-gradient(to bottom, rgba(10,22,40,0.8), transparent)' }} />
       </div>
 
       {/* Dot grid */}
-      <div className="absolute inset-0 dot-grid pointer-events-none" style={{ opacity: 0.2 }} />
+      <div className="dot-grid" style={{ position: 'absolute', inset: 0, opacity: 0.18, pointerEvents: 'none' }} />
 
-      {/* ── Main content ── */}
-      <div
-        className="relative z-10 flex flex-1 flex-col items-center justify-center text-center px-5 sm:px-8"
-        style={{ paddingTop: '6rem', paddingBottom: '5rem' }}
-      >
+      {/* Main content */}
+      <div style={{
+        position: 'relative', zIndex: 10,
+        flex: 1, display: 'flex', flexDirection: 'column',
+        alignItems: 'center', justifyContent: 'center', textAlign: 'center',
+        padding: '96px 24px 80px',
+        maxWidth: 1200, margin: '0 auto', width: '100%',
+      }}>
+
         {/* Badge */}
-        <div
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-widest mb-10"
-          style={{
-            background: 'rgba(226,255,103,0.1)',
-            border: '1px solid rgba(226,255,103,0.25)',
-            color: '#E2FF67',
-            backdropFilter: 'blur(8px)',
-            opacity: visible ? 1 : 0,
-            transform: visible ? 'translateY(0)' : 'translateY(-10px)',
-            transition: 'opacity 0.5s ease, transform 0.5s ease',
-          }}
-        >
-          <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#E2FF67', flexShrink: 0, display: 'inline-block', animation: 'pulse-dot 2s ease-in-out infinite' }} />
+        <div style={{
+          display: 'inline-flex', alignItems: 'center', gap: 8,
+          padding: '8px 18px', borderRadius: 999,
+          fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' as const,
+          background: 'rgba(232,90,30,0.12)',
+          border: '1px solid rgba(232,90,30,0.3)',
+          color: '#F87C3F',
+          backdropFilter: 'blur(12px)',
+          marginBottom: 40,
+          opacity: visible ? 1 : 0,
+          transform: visible ? 'translateY(0)' : 'translateY(-12px)',
+          transition: 'opacity 0.5s ease, transform 0.5s ease',
+        }}>
+          <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#E85A1E', display: 'inline-block', animation: 'pulse-dot 2s ease-in-out infinite' }} />
           {isAr ? 'إطلاق قريب · الأردن 2026' : 'Launching Soon · Jordan 2026'}
         </div>
 
         {/* Headline */}
-        <h1
-          style={{
-            fontSize: 'clamp(52px, 10vw, 120px)',
-            fontFamily: isAr ? 'Cairo, sans-serif' : 'Barlow Condensed, sans-serif',
-            fontWeight: 900,
-            lineHeight: 0.95,
-            letterSpacing: isAr ? '-0.01em' : '-0.03em',
-            color: 'white',
-            marginBottom: '1.5rem',
-            opacity: visible ? 1 : 0,
-            transform: visible ? 'translateY(0)' : 'translateY(28px)',
-            transition: 'opacity 0.65s ease 0.1s, transform 0.65s ease 0.1s',
-          }}
-        >
+        <h1 style={{
+          fontSize: 'clamp(56px, 11vw, 128px)',
+          fontFamily: isAr ? 'Cairo, sans-serif' : 'Barlow Condensed, sans-serif',
+          fontWeight: 900,
+          lineHeight: 0.92,
+          letterSpacing: isAr ? '-0.01em' : '-0.03em',
+          color: 'white',
+          marginBottom: '1.5rem',
+          opacity: visible ? 1 : 0,
+          transform: visible ? 'translateY(0)' : 'translateY(32px)',
+          transition: 'opacity 0.7s ease 0.1s, transform 0.7s ease 0.1s',
+        }}>
           {isAr ? (
-            <>لعبتك،<br /><span style={{ color: '#E2FF67' }}>ملعبنا</span></>
+            <>لعبتك،<br /><span style={{ background: 'linear-gradient(135deg, #E85A1E, #F87C3F)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>ملعبنا</span></>
           ) : (
-            <>YOUR GAME,<br /><span style={{ color: '#E2FF67' }}>OUR COURT</span></>
+            <>YOUR GAME,<br /><span style={{ background: 'linear-gradient(135deg, #E85A1E, #F87C3F)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>OUR COURT</span></>
           )}
         </h1>
 
-        {/* Sub */}
-        <p
-          style={{
-            fontSize: 'clamp(15px, 2vw, 20px)',
-            color: 'rgba(235,235,225,0.65)',
-            maxWidth: 520,
-            lineHeight: 1.65,
-            marginBottom: '2.5rem',
-            fontFamily: isAr ? 'Cairo, sans-serif' : 'Barlow, sans-serif',
-            fontWeight: 400,
-            opacity: visible ? 1 : 0,
-            transform: visible ? 'translateY(0)' : 'translateY(20px)',
-            transition: 'opacity 0.65s ease 0.22s, transform 0.65s ease 0.22s',
-          }}
-        >
+        {/* Subtitle */}
+        <p style={{
+          fontSize: 'clamp(15px, 1.8vw, 19px)',
+          color: 'rgba(235,235,225,0.6)',
+          maxWidth: 500,
+          lineHeight: 1.7,
+          marginBottom: '3rem',
+          fontFamily: isAr ? 'Cairo, sans-serif' : 'Barlow, sans-serif',
+          fontWeight: 400,
+          opacity: visible ? 1 : 0,
+          transform: visible ? 'translateY(0)' : 'translateY(20px)',
+          transition: 'opacity 0.7s ease 0.22s, transform 0.7s ease 0.22s',
+        }}>
           {t('heroSubtitle')}
         </p>
 
         {/* CTA row */}
-        <div
-          className="flex flex-col sm:flex-row gap-3 items-center"
-          style={{
-            opacity: visible ? 1 : 0,
-            transform: visible ? 'translateY(0)' : 'translateY(18px)',
-            transition: 'opacity 0.65s ease 0.34s, transform 0.65s ease 0.34s',
-          }}
-        >
+        <div style={{
+          display: 'flex', gap: 14, alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center',
+          opacity: visible ? 1 : 0,
+          transform: visible ? 'translateY(0)' : 'translateY(18px)',
+          transition: 'opacity 0.7s ease 0.34s, transform 0.7s ease 0.34s',
+        }}>
           <KortnaButton
             variant="primary"
             size="lg"
             onClick={() => window.location.href = '/courts'}
-            style={{ fontFamily: isAr ? 'Cairo, sans-serif' : 'Barlow, sans-serif', minWidth: 180 }}
+            style={{ fontFamily: isAr ? 'Cairo, sans-serif' : 'Barlow, sans-serif', minWidth: 190 }}
           >
             {t('bookNow')}
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transform: isAr ? 'rotate(180deg)' : 'none' }}>
               <path d="M5 12h14M12 5l7 7-7 7"/>
             </svg>
           </KortnaButton>
-
           <KortnaButton
             variant="secondary"
             size="lg"
             onClick={() => scrollTo('for-venues')}
-            style={{ fontFamily: isAr ? 'Cairo, sans-serif' : 'Barlow, sans-serif', minWidth: 180 }}
+            style={{ fontFamily: isAr ? 'Cairo, sans-serif' : 'Barlow, sans-serif', minWidth: 190 }}
           >
             {t('heroCta2')}
           </KortnaButton>
         </div>
 
         {/* Stats strip */}
-        <div
-          className="flex items-center gap-10 sm:gap-16 mt-16 flex-wrap justify-center"
-          style={{
-            opacity: visible ? 1 : 0,
-            transition: 'opacity 0.8s ease 0.55s',
-          }}
-        >
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 0,
+          marginTop: 72,
+          opacity: visible ? 1 : 0,
+          transition: 'opacity 0.9s ease 0.55s',
+        }}>
           {[
             { n: '100+', l: isAr ? 'ملعب شريك' : 'Partner Courts' },
             { n: '10K+', l: isAr ? 'لاعب نشط' : 'Active Players' },
             { n: '50K+', l: isAr ? 'حجز تم' : 'Bookings Made' },
           ].map((s, i) => (
-            <div key={s.n} className="text-center" style={{ animationDelay: `${i * 100}ms` }}>
-              <div style={{
-                fontFamily: 'Barlow Condensed, sans-serif',
-                fontWeight: 900,
-                fontSize: 'clamp(28px, 4vw, 42px)',
-                color: '#E2FF67',
-                lineHeight: 1,
-              }}>
-                {s.n}
+            <>
+              <div key={s.n} style={{ textAlign: 'center', padding: '0 40px' }}>
+                <div style={{
+                  fontFamily: 'Barlow Condensed, sans-serif',
+                  fontWeight: 900,
+                  fontSize: 'clamp(30px, 4vw, 48px)',
+                  lineHeight: 1,
+                  background: 'linear-gradient(135deg, #E85A1E, #F87C3F)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                }}>
+                  {s.n}
+                </div>
+                <div style={{
+                  fontSize: 10,
+                  marginTop: 5,
+                  color: 'rgba(235,235,225,0.4)',
+                  fontFamily: isAr ? 'Cairo, sans-serif' : 'Barlow, sans-serif',
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase' as const,
+                }}>
+                  {s.l}
+                </div>
               </div>
-              <div style={{
-                fontSize: 11,
-                marginTop: 4,
-                color: 'rgba(235,235,225,0.45)',
-                fontFamily: isAr ? 'Cairo, sans-serif' : 'Barlow, sans-serif',
-                letterSpacing: '0.05em',
-                textTransform: 'uppercase',
-              }}>
-                {s.l}
-              </div>
-            </div>
+              {i < 2 && (
+                <div key={`div-${i}`} style={{ width: 1, height: 40, background: 'rgba(255,255,255,0.1)', flexShrink: 0 }} />
+              )}
+            </>
           ))}
         </div>
       </div>
 
       {/* Scroll cue */}
-      <div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-        style={{
-          opacity: visible ? 0.5 : 0,
-          transition: 'opacity 1s ease 1s',
-        }}
-      >
-        <span style={{ fontSize: 9, color: 'white', letterSpacing: '0.15em', textTransform: 'uppercase', fontFamily: 'Barlow, sans-serif' }}>
+      <div style={{
+        position: 'absolute', bottom: 32, left: '50%', transform: 'translateX(-50%)',
+        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
+        opacity: visible ? 0.45 : 0,
+        transition: 'opacity 1.2s ease 1.2s',
+      }}>
+        <span style={{ fontSize: 9, color: 'white', letterSpacing: '0.2em', textTransform: 'uppercase' as const, fontFamily: 'Barlow, sans-serif' }}>
           {isAr ? 'تمرير' : 'Scroll'}
         </span>
-        <div style={{ width: 1, height: 32, background: 'linear-gradient(to bottom, white, transparent)' }} />
+        <div style={{ width: 1, height: 36, background: 'linear-gradient(to bottom, rgba(232,90,30,0.8), transparent)' }} />
       </div>
     </section>
   )

@@ -60,7 +60,7 @@ export default function KortnaFeatures() {
   ]
 
   return (
-    <section style={{ background: 'var(--off-white)', padding: '96px 0' }}>
+    <section style={{ background: 'white', padding: '96px 0' }}>
       <div
         ref={ref}
         style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px' }}
@@ -112,7 +112,7 @@ export default function KortnaFeatures() {
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-          gap: 20,
+          gap: 24,
         }}>
           {features.map((f, i) => (
             <div
@@ -128,8 +128,8 @@ export default function KortnaFeatures() {
                 width: 48, height: 48,
                 borderRadius: 14,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: 'rgba(226,255,103,0.18)',
-                color: 'var(--navy)',
+                background: 'linear-gradient(135deg, rgba(232,90,30,0.15), rgba(248,124,63,0.1))',
+                color: '#E85A1E',
                 marginBottom: 18,
                 flexShrink: 0,
               }}>
