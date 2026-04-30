@@ -1,27 +1,33 @@
 'use client'
 import Navbar from '@/components/Navbar'
-import KortnaHero from '@/components/KortnaHero'
-import KortnaFeatures from '@/components/KortnaFeatures'
-import KortnaHowItWorks from '@/components/KortnaHowItWorks'
-import KortnaStats from '@/components/KortnaStats'
-import KortnaForVenues from '@/components/KortnaForVenues'
+import KortnaHeroNew from '@/components/KortnaHeroNew'
+import KortnaTicker from '@/components/KortnaTicker'
+import KortnaBookSplit from '@/components/KortnaBookSplit'
+import KortnaMatchSplit from '@/components/KortnaMatchSplit'
+import KortnaFeaturedCourts from '@/components/KortnaFeaturedCourts'
+import KortnaEventsSection from '@/components/KortnaEventsSection'
+import KortnaFlashDeals from '@/components/KortnaFlashDeals'
+import KortnaSportsScroll from '@/components/KortnaSportsScroll'
 import KortnaTestimonials from '@/components/KortnaTestimonials'
-import KortnaFAQ from '@/components/KortnaFAQ'
-import KortnaFinalCTA from '@/components/KortnaFinalCTA'
+import KortnaLoyalty from '@/components/KortnaLoyalty'
+import WaitlistCTA from '@/components/WaitlistCTA'
 import Footer from '@/components/Footer'
 
 export default function HomePage() {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <Navbar />
-      <KortnaHero />
-      <KortnaFeatures />
-      <KortnaHowItWorks />
-      <KortnaStats />
-      <KortnaForVenues />
+      <KortnaHeroNew />
+      <KortnaTicker />
+      <KortnaBookSplit />
+      <KortnaMatchSplit />
+      <KortnaFeaturedCourts />
+      <KortnaEventsSection />
+      <KortnaFlashDeals />
+      <KortnaSportsScroll />
       <KortnaTestimonials />
-      <KortnaFAQ />
-      <KortnaFinalCTA />
+      <KortnaLoyalty />
+      <WaitlistCTA />
       <Footer />
     </div>
   )

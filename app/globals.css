@@ -492,14 +492,14 @@ body:has(a:hover, button:hover) #cursor-ring {
    KORTNA BUTTON SYSTEM
    ═══════════════════════════════════════════════ */
 
-/* ── PRIMARY (Orange gradient) ───────────────── */
+/* ── PRIMARY (Lime + Navy) ───────────────────── */
 .kortna-btn-primary {
-  background: linear-gradient(135deg, #E85A1E 0%, #F87C3F 100%);
-  color: #ffffff;
+  background: var(--lime);
+  color: var(--navy);
   font-weight: 800;
   letter-spacing: 0.03em;
   text-transform: uppercase;
-  box-shadow: 0 4px 20px rgba(232,90,30,0.4), inset 0 1px 0 rgba(255,255,255,0.18);
+  box-shadow: 0 4px 20px rgba(226,255,103,0.35), inset 0 1px 0 rgba(255,255,255,0.3);
   transition:
     transform  0.3s cubic-bezier(0.34,1.56,0.64,1),
     box-shadow 0.3s ease,
@@ -510,20 +510,20 @@ body:has(a:hover, button:hover) #cursor-ring {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.25) 0%, transparent 55%);
+  background: linear-gradient(135deg, rgba(255,255,255,0.35) 0%, transparent 55%);
   opacity: 0;
   transition: opacity 0.25s ease;
   border-radius: inherit;
 }
 .kortna-btn-primary:hover {
   transform: translateY(-3px) scale(1.04);
-  box-shadow: 0 14px 40px rgba(232,90,30,0.6), 0 2px 8px rgba(232,90,30,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
-  filter: brightness(1.08);
+  box-shadow: 0 14px 40px rgba(226,255,103,0.5), 0 2px 8px rgba(226,255,103,0.3), inset 0 1px 0 rgba(255,255,255,0.25);
+  filter: brightness(1.06);
 }
 .kortna-btn-primary:hover::before { opacity: 1; }
 .kortna-btn-primary:active {
   transform: translateY(0) scale(0.97);
-  box-shadow: 0 2px 10px rgba(232,90,30,0.3);
+  box-shadow: 0 2px 10px rgba(226,255,103,0.25);
   transition-duration: 0.1s;
   filter: brightness(0.96);
 }
@@ -534,6 +534,26 @@ body:has(a:hover, button:hover) #cursor-ring {
   box-shadow: none;
   filter: none;
 }
+
+/* ── PRIMARY ORANGE variant ──────────────────── */
+.kortna-btn-orange {
+  background: linear-gradient(135deg, #E85A1E 0%, #F87C3F 100%);
+  color: #ffffff;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  box-shadow: 0 4px 20px rgba(232,90,30,0.4), inset 0 1px 0 rgba(255,255,255,0.18);
+  transition:
+    transform  0.3s cubic-bezier(0.34,1.56,0.64,1),
+    box-shadow 0.3s ease,
+    filter     0.2s ease;
+}
+.kortna-btn-orange:hover {
+  transform: translateY(-3px) scale(1.04);
+  box-shadow: 0 14px 40px rgba(232,90,30,0.6);
+  filter: brightness(1.08);
+}
+.kortna-btn-orange:active { transform: translateY(0) scale(0.97); transition-duration: 0.1s; }
 
 /* ── SECONDARY (Glass) ───────────────────────── */
 .kortna-btn-secondary {
@@ -645,3 +665,281 @@ body:has(a:hover, button:hover) #cursor-ring {
   .kortna-btn-primary, .kortna-btn-secondary, .kortna-btn-ghost { transition: opacity 0.2s; }
   .kortna-btn-primary:hover, .kortna-btn-secondary:hover, .kortna-btn-ghost:hover { transform: none; }
 }
+
+/* ═══════════════════════════════════════════════
+   NEW SECTION STYLES
+   ═══════════════════════════════════════════════ */
+
+/* ── TICKER BAR ──────────────────────────────── */
+.ticker-bar {
+  background: var(--lime);
+  overflow: hidden;
+  position: relative;
+}
+.ticker-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 32px;
+  white-space: nowrap;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--navy);
+}
+
+/* ── SPLIT SECTION ───────────────────────────── */
+.split-card {
+  background: white;
+  border-radius: 24px;
+  border: 1px solid rgba(18,39,68,0.08);
+  box-shadow: 0 4px 24px rgba(18,39,68,0.07);
+  overflow: hidden;
+}
+
+/* ── COURT CARD (New) ────────────────────────── */
+.court-card-new {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid rgba(18,39,68,0.07);
+  transition: transform 0.3s cubic-bezier(0.34,1.2,0.64,1), box-shadow 0.3s ease;
+  cursor: pointer;
+}
+.court-card-new:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 24px 56px rgba(18,39,68,0.14);
+}
+
+/* ── EVENT ROW ───────────────────────────────── */
+.event-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  border-radius: 14px;
+  border: 1px solid rgba(18,39,68,0.06);
+  background: white;
+  transition: border-color 0.2s, background 0.2s;
+  cursor: pointer;
+}
+.event-row:hover {
+  border-color: rgba(226,255,103,0.5);
+  background: rgba(226,255,103,0.04);
+}
+
+/* ── FLASH DEAL ──────────────────────────────── */
+.flash-deal-card {
+  background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%);
+  border: 1px solid rgba(226,255,103,0.2);
+  border-radius: 24px;
+  overflow: hidden;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.flash-deal-card:hover {
+  border-color: rgba(226,255,103,0.45);
+  box-shadow: 0 0 40px rgba(226,255,103,0.08);
+}
+.countdown-box {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  min-width: 52px;
+  padding: 8px 10px;
+  text-align: center;
+}
+
+/* ── SPORTS SCROLL ───────────────────────────── */
+.sports-track {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  cursor: grab;
+  user-select: none;
+}
+.sports-track::-webkit-scrollbar { display: none; }
+.sports-track:active { cursor: grabbing; }
+.sport-pill {
+  flex-shrink: 0;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 24px;
+  background: white;
+  border-radius: 20px;
+  border: 1.5px solid rgba(18,39,68,0.07);
+  transition: border-color 0.25s, background 0.25s, transform 0.25s;
+  cursor: pointer;
+  min-width: 100px;
+}
+.sport-pill:hover {
+  border-color: var(--lime);
+  background: rgba(226,255,103,0.06);
+  transform: translateY(-4px);
+}
+.sport-pill.active {
+  background: var(--lime);
+  border-color: var(--lime);
+  color: var(--navy);
+}
+
+/* ── PLAYER CARD (Match page) ────────────────── */
+.player-card {
+  background: white;
+  border-radius: 20px;
+  padding: 24px;
+  border: 1px solid rgba(18,39,68,0.08);
+  transition: transform 0.3s cubic-bezier(0.34,1.2,0.64,1), box-shadow 0.3s ease, border-color 0.3s;
+}
+.player-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 50px rgba(18,39,68,0.12);
+  border-color: rgba(226,255,103,0.4);
+}
+
+/* ── DEAL CARD ───────────────────────────────── */
+.deal-card {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid rgba(18,39,68,0.07);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.deal-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 48px rgba(18,39,68,0.11);
+}
+
+/* ── REWARDS ─────────────────────────────────── */
+.xp-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--lime), var(--blue));
+  border-radius: inherit;
+  transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+}
+.tier-card {
+  padding: 28px 24px;
+  border-radius: 20px;
+  border: 1.5px solid rgba(18,39,68,0.08);
+  background: white;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s;
+}
+.tier-card.active {
+  border-color: var(--lime);
+  box-shadow: 0 0 0 3px rgba(226,255,103,0.2), 0 12px 32px rgba(18,39,68,0.1);
+}
+.tier-card:hover:not(.active) { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(18,39,68,0.08); }
+
+/* ── LOYALTY TIERS (Home) ────────────────────── */
+.loyalty-tier {
+  position: relative;
+  padding: 28px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.04);
+  transition: border-color 0.3s, background 0.3s;
+}
+.loyalty-tier:hover {
+  border-color: rgba(226,255,103,0.3);
+  background: rgba(226,255,103,0.04);
+}
+
+/* ── TOAST ───────────────────────────────────── */
+.kortna-toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  z-index: 9999;
+  background: var(--navy);
+  color: white;
+  padding: 14px 24px;
+  border-radius: 14px;
+  border: 1px solid rgba(226,255,103,0.25);
+  font-weight: 600;
+  font-size: 14px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s;
+  opacity: 0;
+  white-space: nowrap;
+}
+.kortna-toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+/* ── MATCH REQUEST BANNER ────────────────────── */
+.match-banner {
+  background: linear-gradient(135deg, var(--navy) 0%, #0d1e36 100%);
+  border-radius: 24px;
+  padding: 48px;
+  position: relative;
+  overflow: hidden;
+}
+.match-banner::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 300px; height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(226,255,103,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* ── SECTION LABEL ───────────────────────────── */
+.section-label {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.section-label-lime {
+  background: rgba(226,255,103,0.12);
+  color: #b8d93a;
+}
+.section-label-navy {
+  background: rgba(18,39,68,0.07);
+  color: var(--navy);
+}
+.section-label-blue {
+  background: rgba(22,69,211,0.08);
+  color: var(--blue);
+}
+
+/* ── SCORE BADGE ─────────────────────────────── */
+.score-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* ── FADE IN UP ──────────────────────────────── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-in-up {
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+/* ── SPIN SLOW ───────────────────────────────── */
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.spin-slow { animation: spin-slow 20s linear infinite; }
